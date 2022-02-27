@@ -5,17 +5,25 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="style.css" />
-    <title>Document</title>
+    <title>My Fabric JS Test</title>
 </head>
 <body>
     <h1>Hello World!</h1>
 
-    <canvas id="canvas"></canvas>
+    <button style = "margin-inline: 20px" onclick="togglePan()">Pan mode</button>
+    <button style = "margin-inline: 50px" onclick="toggleDraw()">Draw mode</button>
+    <button style = "margin-inline: 50px" onclick="toggleBuild()">Build/Select mode</button>
+    <br>
+    <p id="canvas-mode"></p>
+    <canvas id="canvasID"></canvas>
     
-    <button onclick="togglePan()">Toggle Pan mode</button>
+
     
     
     <script src="lib\fabric.min.js"></script>
     <script src="script.js"></script>
+<script>
+    document.getElementById("canvas-mode").innerHTML = currentMode
+</script>
 </body>
 </html>
