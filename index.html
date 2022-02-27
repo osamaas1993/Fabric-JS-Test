@@ -1,29 +1,102 @@
+<!-- @format -->
+
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="style.css" />
-    <title>My Fabric JS Test</title>
-</head>
-<body>
-    <h1>Hello World!</h1>
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" type="text/css" href="style.css" />
+		<title>My Fabric JS Test</title>
+	</head>
+	<body>
+		<h1>My Workspace</h1>
 
-    <button style = "margin-inline: 20px" onclick="togglePan()">Pan mode</button>
-    <button style = "margin-inline: 50px" onclick="toggleDraw()">Draw mode</button>
-    <button style = "margin-inline: 50px" onclick="toggleBuild()">Build/Select mode</button>
-    <br>
-    <p id="canvas-mode"></p>
-    <canvas id="canvasID"></canvas>
-    
+		<button class="abstract" onclick="togglePan()">Pan mode</button>
+		<button class="abstract" onclick="toggleDraw()">Draw mode</button>
+		<button class="abstract" onclick="toggleBuild()">Build/Select mode</button>
 
+		<br />
+
+		<!-- <p id="canvas-mode"></p> -->
+		<canvas style="margin-inline: 50px" id="canvasID"></canvas>
+		<br />
+
+    <!-- drawing parameters-->
+    <div id="drawing-mode-options">
+    <label><h6 class="propertyText">Drawing properties</h6></label>
+      <input class ="abstract" id="colorPicker" data-jscolor="{value:'#000000'}" style="font-family:Arial, Helvetica, sans-serif">
+      </input>
+
+    <div class="abstract">
+      <label for="drawing-line-width" class="propertyText">Line width:</label>
+      <span class="propertyText" id="widthSelector">1</span><input type="range" value="1" min="1" max="20" id="drawing-line-width">
+    </div><br>
+  </div>
+
+		<!-- <div style="display: inline-block; margin-left: 10px">
+        <button id="drawing-mode" class="btn btn-info">Cancel drawing mode</button><br>
+        <button id="clear-canvas" class="btn btn-info">Clear</button><br>
     
-    
-    <script src="lib\fabric.min.js"></script>
-    <script src="script.js"></script>
+    brush options
+        <div id="drawing-mode-options">
+          <label for="drawing-mode-selector">Mode:</label>
+          <select id="drawing-mode-selector">
+            <option>Pencil</option>
+            <option>Circle</option>
+            <option>Spray</option>
+            <option>Pattern</option>
+      
+            <option>hline</option>
+            <option>vline</option>
+            <option>square</option>
+            <option>diamond</option>
+            <option>texture</option>
+          </select><br>
+      
+          <label for="drawing-line-width">Line width:</label>
+          <span class="info">30</span><input type="range" value="30" min="0" max="150" id="drawing-line-width"><br>
+      
+          <label for="drawing-color">Line color:</label>
+          <input type="color" value="#005E7A" id="drawing-color"><br>
+      
+          <label for="drawing-shadow-color">Shadow color:</label>
+          <input type="color" value="#005E7A" id="drawing-shadow-color"><br>
+      
+          <label for="drawing-shadow-width">Shadow width:</label>
+          <span class="info">0</span><input type="range" value="0" min="0" max="50" id="drawing-shadow-width"><br>
+      
+          <label for="drawing-shadow-offset">Shadow offset:</label>
+          <span class="info">0</span><input type="range" value="0" min="0" max="50" id="drawing-shadow-offset"><br>
+        </div>
+      </div> -->
+
+		<br />
+
+		<!--<form method="post" enctype="multipart/form-data">
+        <div>
+          <label for="file">Choose file to upload</label>
+          <input type="file" id="file" name="file" multiple>
+        </div>
+        <div>
+          <button>Submit</button>
+        </div>
+       </form> -->
+
+<script src="lib\fabric.min.js"></script>
+<script src="script.js"></script>
+<script src="lib\jscolor.js"></script>
 <script>
-    document.getElementById("canvas-mode").innerHTML = currentMode
+// These options apply to all color pickers on the page
+jscolor.presets.default = {
+	format:'hex', alphaChannel:false, 
+	backgroundColor:'rgba(255,255,255,0.5)', closeButton:true, 
+	shadowColor:'rgba(0,0,0,0.14)'
+};
 </script>
-</body>
+
+
+
+		<script></script>
+	</body>
 </html>

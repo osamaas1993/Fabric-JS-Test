@@ -1,28 +1,58 @@
-h1{
-    color: blue;
-    font-size: 20px;
+/** @format */
+
+h1 {
+	color: rgba(78, 78, 255, 0.5);
+	font-size: 20px;
+	font-family: Arial, Helvetica, sans-serif;
 }
 
-button {
-    color: #090909;
-    padding: 0.7em 1.7em;
+.abstract {
+	color: #090909;
+	padding: 0.7em 1.7em;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	border-radius: 0.5em;
+	background: #e8e8e8;
+	border: 1px solid #e8e8e8;
+	transition: all 0.5s;
+	box-shadow: 6px 6px 12px #949494, -6px -6px 12px #ffffff;
+	margin: 20px;
+    margin-bottom: 20px;
+
+}
+
+button:hover {
+	border: 1.2px solid white;
+}
+
+button:active {
+	box-shadow: 4px 4px 12px #949494, -4px -4px 12px #ffffff;
+}
+
+.propertyText {
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 13px;
-    border-radius: 0.5em;
-    background: #e8e8e8;
-    border: 1px solid #e8e8e8;
-    transition: all .3s;
-    box-shadow: 6px 6px 12px #a5a5a5,
-                -6px -6px 12px #ffffff;
-   }
-   
-   button:hover {
-    border: 1px solid white;
-   }
-   
-   button:active {
-    box-shadow: 4px 4px 12px #949494,
-                -4px -4px 12px #ffffff;
+    font-size: 12pt;
+    font-weight: 100;
+    margin-block-start: 0px;
+    margin-block-end: 0px;
+    vertical-align:5px;
 }
 
-body {background-color: #e8e8e8;}
+#drawing-mode-options {
+	float: right;
+}
+#canvasID {
+	float: left;
+	outline: 3px dashed rgba(28, 110, 164, 0.5);
+	outline-offset: 3px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+}
+
+#drawing-mode-options {
+    float: left;
+}
+
+body {
+	background-color: #e8e8e8;
+}
