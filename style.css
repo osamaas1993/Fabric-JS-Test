@@ -1,24 +1,23 @@
 /** @format */
 
 h1 {
-	color: rgba(78, 78, 255, 0.5);
+	color: rgba(78, 78, 255, 0.8);
 	font-size: 20px;
 	font-family: Arial, Helvetica, sans-serif;
+	margin-top: 20px;
 }
 
 .abstract {
 	color: #090909;
 	padding: 0.7em 1.7em;
 	font-family: Arial, Helvetica, sans-serif;
-	font-size: 13px;
+	font-size: 10px;
 	border-radius: 0.5em;
 	background: #e8e8e8;
 	border: 1px solid #e8e8e8;
 	transition: all 0.5s;
-	box-shadow: 6px 6px 12px #949494, -6px -6px 12px #ffffff;
-	margin: 20px;
-    margin-bottom: 20px;
-
+	box-shadow: 5px 5px 10px #949494, -5px -5px 10px #ffffff;
+	margin: 10px;
 }
 
 button:hover {
@@ -30,12 +29,12 @@ button:active {
 }
 
 .propertyText {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 12pt;
-    font-weight: 100;
-    margin-block-start: 0px;
-    margin-block-end: 0px;
-    vertical-align:5px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 9pt;
+	font-weight: 100;
+	margin-block-start: 0px;
+	margin-block-end: 0px;
+	vertical-align: 5px;
 }
 
 #drawing-mode-options {
@@ -47,10 +46,27 @@ button:active {
 	outline-offset: 3px;
 	-webkit-border-radius: 5px;
 	border-radius: 5px;
+	margin: 20px;
+	margin-inline: 50px;
+}
+
+.propertiesContainer {
+	display: flex;
+	flex-direction: row;
+	
+}
+
+.buttonBar {
+	display: flex;
+	flex-direction: row;
+	flex-grow: 0;
+	flex-flow: row;
+	align-content: stretch;
+	
 }
 
 #drawing-mode-options {
-    float: left;
+	float: left;
 }
 
 body {

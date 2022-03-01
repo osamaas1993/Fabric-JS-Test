@@ -59,6 +59,15 @@ function setColorListener() {
 	});
 }
 
+// clear canvas function
+function clearCanvas(canvas) {
+	canvas.getObjects().forEach (function (o) {
+			if (o !== canvas.backgroundImage) {
+				canvas.remove(o);
+			}
+		})
+}
+
 //for the toggle pan button
 function togglePan() {
 	if (currentMode !== "panMode") {
