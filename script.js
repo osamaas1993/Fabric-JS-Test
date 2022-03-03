@@ -5,13 +5,15 @@ console.log("This is javascript");
 //function for creating the canvas, the function includes its parameters
 function initCanvas(id) {
 	return new fabric.Canvas(id, {
-		width: 800,
-		height: 600,
+		width: 600,
+		height: 400,
 		isDrawingMode: false,
 		selection: false,
-		//selectionKey : ["shiftKey"],
+		snapAngle : 10,
+		snapThreshold : 10,
 		skipTargetFind: false,
 		backgroundColor: "rgba(240, 240, 240, 1.0)",
+		selectionKey : 'shiftKey'
 	});
 }
 
@@ -61,11 +63,45 @@ function setColorListener() {
 
 // clear canvas function
 function clearCanvas(canvas) {
-	canvas.getObjects().forEach (function (o) {
-			if (o !== canvas.backgroundImage) {
-				canvas.remove(o);
-			}
-		})
+	canvas.getObjects().forEach(function (o) {
+		if (o !== canvas.backgroundImage) {
+			canvas.remove(o);
+		}
+	});
+}
+
+//COPY AND PASTE FUNCTIONS
+function Copy() {
+	canvas.getActiveObject().clone(function(cloned) {
+		_clipboard = cloned;
+	});
+}
+
+function Paste() {
+	// clone again, so you can do multiple copies.
+	_clipboard.clone(function(clonedObj) {
+		canvas.discardActiveObject();
+		clonedObj.set({
+			left: clonedObj.left + 10,
+			top: clonedObj.top + 10,
+			evented: true,
+		});
+		if (clonedObj.type === 'activeSelection') {
+			// active selection needs a reference to the canvas.
+			clonedObj.canvas = canvas;
+			clonedObj.forEachObject(function(obj) {
+				canvas.add(obj);
+			});
+			// this should solve the unselectability
+			clonedObj.setCoords();
+		} else {
+			canvas.add(clonedObj);
+		}
+		_clipboard.top += 10;
+		_clipboard.left += 10;
+		canvas.setActiveObject(clonedObj);
+		canvas.requestRenderAll();
+	});
 }
 
 //for the toggle pan button
@@ -103,6 +139,32 @@ function toggleDraw() {
 		(currentMode = "buildMode"), console.log(currentMode);
 		canvas.isDrawingMode = false;
 	}
+}
+
+// object creation functions
+function createRectangle() {
+	var rect = new fabric.Rect({
+		width: 100,
+		height: 100,
+		fill: color,
+		top : canvas.height/2,
+		left : canvas.width/2,
+		originX : 'center',
+		originY : 'center',
+	});
+	canvas.add(rect);
+	canvas.renderAll();
+	console.log("create rectangle button");
+}
+
+function createCircle(canvas) {
+	var circle = new fabric.Circle({
+		radius: 100,
+		fill: color,
+	});
+	canvas.add(circle);
+	canvas.renderAll();
+	console.log("create circle button");
 }
 
 //the setPanEvents include the mouse down, up, and moving parameters for when we are in pan mode
