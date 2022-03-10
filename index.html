@@ -7,23 +7,24 @@
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <!--<link rel="stylesheet" type="text/css" href="style.css" /> -->
+  <link rel="stylesheet" type="text/css" href="style.css" />
   <title>My Fabric JS Test</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
 </head>
 
 <body id="body">
   <h1>My Workspace</h1>
-  <hr/>
-  <br>
+  <hr />
   <div id="workBody">
     <div id="leftBar">
       <h3>Canvas Modes</h3>
-      <div class="buttonBar">
-        <button class="abstract" onclick="togglePan()">Pan mode</button>
-        <button class="abstract" onclick="toggleDraw()">Draw mode</button>
-        <button class="abstract" onclick="toggleBuild()">Build/Select mode</button>
+      <button id="currentModeDiv" class="abstract" disabled>Active Mode : <strong>Build/Select mode</strong></button>
+      <div id="buttonBar">
+        <button class="abstract" onclick="togglePan(), changeModeName()">Pan mode</button>
+        <button class="abstract" onclick="toggleDraw(), changeModeName()" >Draw mode</button>
+        <button class="abstract" onclick="toggleBuild(), changeModeName()">Build/Select mode</button>
         <button class="abstract" onclick="clearCanvas(canvas)">Clear canvas</button>
-        <button class="abstract" onclick="clearSelection(canvas)">Clear selection</button>
       </div>
       <br />
 
@@ -44,10 +45,16 @@
 
       <div id="objectButtons">
         <h3 id="objectsTitle"> Create Objects</h3>
-          <button class="abstract" onclick="createRectangle()">Rectangle</button>
-          <button class="abstract" onclick="createCircle(canvas)">Circle</button>
-          <button class="abstract" onclick="Copy()">Copy</button>
-          <button class="abstract" onclick="Paste()">Paste</button>
+        <button class="abstract" onclick="addSprite()">Sprite</button>
+        <button class="abstract" onclick="createRectangle()">Rectangle</button>
+        <button class="abstract" onclick="createCircle(canvas)">Circle</button>
+        <button class="abstract" onclick="Copy()">Copy</button>
+        <button class="abstract" onclick="Paste()">Paste</button>
+      </div>
+
+      <div id="animateButtons">
+        <h3 id="animateTitle"> Animate Objects</h3>
+        <button class="abstract" onclick="moveLeft()">Move Left</button>
       </div>
     </div>
 
@@ -61,20 +68,15 @@
 
 
   <script src="lib\fabric.min.js"></script>
+  <script src="lib/sprite.class.js"></script>
   <script src="script.js"></script>
-  <script src="lib\jscolor.js"></script>
-  <script>
-    // These options apply to all color pickers on the page
+  <script  src="lib\jscolor.js">
     jscolor.presets.default = {
       format: 'hex', alphaChannel: true,
       backgroundColor: 'rgba(255,255,255,0.5)', closeButton: true,
       shadowColor: 'rgba(0,0,0,0.14)'
     };
   </script>
-
-
-
-  <script></script>
 </body>
 
 </html>

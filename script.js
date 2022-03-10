@@ -1,6 +1,8 @@
-/** @format */
+/* @format */
 
 console.log("This is javascript");
+
+//////////////////////////////////////////////////////////////////////////////////// CANVAS CREATION
 
 //function for creating the canvas, the function includes its parameters
 function initCanvas(id) {
@@ -9,14 +11,14 @@ function initCanvas(id) {
 		height: 400,
 		isDrawingMode: false,
 		selection: false,
-		snapAngle : 10,
-		snapThreshold : 10,
+		snapAngle: 10,
+		snapThreshold: 10,
 		skipTargetFind: false,
 		backgroundColor: "rgba(240, 240, 240, 1.0)",
-		selectionKey : 'shiftKey'
+		selectionKey: "shiftKey",
 	});
+	
 }
-
 //setting the canvas background through URL
 function setBackground(url, canvas) {
 	fabric.Image.fromURL(url, function (img) {
@@ -24,10 +26,10 @@ function setBackground(url, canvas) {
 		canvas.renderAll();
 	});
 }
-
 //creating a canvas that takes its options from the initCanvas function, the ID parameter is the canvas html ID
 const canvas = initCanvas("canvasID");
 
+ //////////////////////////////////////////////////////////////////////////////////// VARIOUS SETTINGS
 //modes objects and currentMode variable
 const modes = {
 	pan: "panMode",
@@ -35,11 +37,21 @@ const modes = {
 	draw: "drawMode",
 };
 
-let currentMode = "buildMode";
+var currentMode = "buildMode";
 let mousePressed = false;
 let drawWidth = 1;
 let color = "#000000";
 
+// updating the active mode button with the current mode
+function changeModeName() {
+	if (currentMode === "panMode") {
+		document.getElementById("currentModeDiv").innerHTML =  `Active Mode : <strong>Pan mode</strong>`
+	}
+	else if (currentMode === "drawMode") {
+		document.getElementById("currentModeDiv").innerHTML =  `Active Mode : <strong>Draw mode</strong>`
+	} else {
+		document.getElementById("currentModeDiv").innerHTML =  `Active Mode : <strong>Build/Select mode</strong>`
+	}	}
 // modifying the drawing width using the slider
 function setWidthListener() {
 	const widthPicker = document.getElementById("drawing-line-width");
@@ -60,7 +72,7 @@ function setColorListener() {
 		canvas.renderAll();
 	});
 }
-
+ //////////////////////////////////////////////////////////////////////////////////// MODES
 // clear canvas function
 function clearCanvas(canvas) {
 	canvas.getObjects().forEach(function (o) {
@@ -69,41 +81,6 @@ function clearCanvas(canvas) {
 		}
 	});
 }
-
-//COPY AND PASTE FUNCTIONS
-function Copy() {
-	canvas.getActiveObject().clone(function(cloned) {
-		_clipboard = cloned;
-	});
-}
-
-function Paste() {
-	// clone again, so you can do multiple copies.
-	_clipboard.clone(function(clonedObj) {
-		canvas.discardActiveObject();
-		clonedObj.set({
-			left: clonedObj.left + 10,
-			top: clonedObj.top + 10,
-			evented: true,
-		});
-		if (clonedObj.type === 'activeSelection') {
-			// active selection needs a reference to the canvas.
-			clonedObj.canvas = canvas;
-			clonedObj.forEachObject(function(obj) {
-				canvas.add(obj);
-			});
-			// this should solve the unselectability
-			clonedObj.setCoords();
-		} else {
-			canvas.add(clonedObj);
-		}
-		_clipboard.top += 10;
-		_clipboard.left += 10;
-		canvas.setActiveObject(clonedObj);
-		canvas.requestRenderAll();
-	});
-}
-
 //for the toggle pan button
 function togglePan() {
 	if (currentMode !== "panMode") {
@@ -141,30 +118,93 @@ function toggleDraw() {
 	}
 }
 
+ //////////////////////////////////////////////////////////////////////////////////// OBJECT CREATION - COPY - PASTE
+
 // object creation functions
 function createRectangle() {
 	var rect = new fabric.Rect({
 		width: 100,
 		height: 100,
 		fill: color,
-		top : canvas.height/2,
-		left : canvas.width/2,
-		originX : 'center',
-		originY : 'center',
+		top: -50,
+		left: canvas.width / 2,
+		originX: "center",
+		originY: "center",
+		objectCaching: false,
 	});
 	canvas.add(rect);
 	canvas.renderAll();
 	console.log("create rectangle button");
+	rect.animate ('top', canvas.height/2, {
+		onChange:canvas.renderAll.bind(canvas),
+		duration : 1000,
+		easing: fabric.util.ease.easeInOutCubic,
+	})
+	rect.on('selected', function() {
+		rect.opacity=0.75 ;
+	})
+	rect.on('deselected', function() {
+		rect.opacity=1 ;
+	})
 }
 
 function createCircle(canvas) {
 	var circle = new fabric.Circle({
-		radius: 100,
+		radius: 50,
 		fill: color,
+		top: -50,
+		left: canvas.width / 2,
+		originX: "center",
+		originY: "center",
 	});
 	canvas.add(circle);
 	canvas.renderAll();
+	circle.animate ('top', canvas.height/2, {
+		onChange:canvas.renderAll.bind(canvas),
+		duration : 1000,
+		easing: fabric.util.ease.easeInOutCubic,
+	})
 	console.log("create circle button");
+	circle.on('selected', function() {
+		circle.opacity=0.75 ;
+	})
+	circle.on('deselected', function() {
+		circle.opacity=1 ;
+	})
+}
+
+//COPY AND PASTE FUNCTIONS
+function Copy() {
+	canvas.getActiveObject().clone(function (cloned) {
+		_clipboard = cloned;
+	});
+}
+
+function Paste() {
+	// clone again, so you can do multiple copies.
+	_clipboard.clone(function (clonedObj) {
+		canvas.discardActiveObject();
+		clonedObj.set({
+			left: clonedObj.left + 10,
+			top: clonedObj.top + 10,
+			evented: true,
+		});
+		if (clonedObj.type === "activeSelection") {
+			// active selection needs a reference to the canvas.
+			clonedObj.canvas = canvas;
+			clonedObj.forEachObject(function (obj) {
+				canvas.add(obj);
+			});
+			// this should solve the unselectability
+			clonedObj.setCoords();
+		} else {
+			canvas.add(clonedObj);
+		}
+		_clipboard.top += 10;
+		_clipboard.left += 10;
+		canvas.setActiveObject(clonedObj);
+		canvas.requestRenderAll();
+	});
 }
 
 //the setPanEvents include the mouse down, up, and moving parameters for when we are in pan mode
@@ -205,11 +245,59 @@ function setMouseEvents(canvas) {
 		canvas.setCursor("default");
 		canvas.renderAll();
 	});
+	
 }
 
-//drawing options
+ //////////////////////////////////////////////////////////////////////////////////// SPRITES
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+ function addSprite() {
+		//fabric.Object.prototype.originX = fabric.Object.prototype.originY = "center";
+		fabric.Object.prototype.transparentCorners = true;
+		i = canvas.width/2; //left
+		j = canvas.height/2; //top
+		fabric.Sprite.fromURL("lib/copper.png", createSprite(i, j));
+
+
+		function createSprite(i, j) {
+			return function (sprite) {
+				sprite.set({
+					left: i,
+					top: j,
+					opacity: 1,
+				});
+				sprite.on('selected', function() {
+					sprite.opacity=0.75 ;
+				})
+				sprite.on('deselected', function() {
+					sprite.opacity=1 ;
+				})
+				canvas.add(sprite);
+				sprite.play();
+
+				console.log("sprite created");
+				/*setTimeout(function () {
+					sprite.set("dirty", true);
+				}, fabric.util.getRandomInt(1, 10) * 100); */
+			};
+		}
+		(function render() {
+			canvas.renderAll();
+			fabric.util.requestAnimFrame(render);
+		})();
+ };
+
+//////////////////////////////////////////////////////////////////////////////////// ANIMATE
+function moveLeft() {
+	console.log("move left button");
+	canvas.getActiveObject.animate ('left', 50, {
+		onChange:canvas.renderAll.bind(canvas),
+		duration : 1000,
+		easing: fabric.util.ease.easeInOutCubic,
+	})
+
+}
+
+ ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 setBackground(
 	"https://cdn.pixabay.com/photo/2016/11/23/13/48/beach-1852945_960_720.jpg",
