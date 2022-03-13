@@ -24,7 +24,9 @@
         <button class="abstract" onclick="togglePan(), changeModeName()">Pan mode</button>
         <button class="abstract" onclick="toggleDraw(), changeModeName()" >Draw mode</button>
         <button class="abstract" onclick="toggleBuild(), changeModeName()">Build/Select mode</button>
-        <button class="abstract" onclick="clearCanvas(canvas)">Clear canvas</button>
+        <button class="abstract" onclick="clearCanvas(canvas)">Clear all</button>
+        <button class="abstract" onclick="clearSelection(canvas)">Delete</button>
+
       </div>
       <br />
 
@@ -41,6 +43,12 @@
           <span class="propertyText" id="widthSelector">1</span><input type="range" value="1" min="1" max="20"
             id="drawing-line-width">
         </div> <br>
+
+        <div class="abstract">
+          <label for="object-opacity" class="propertyText">Opacity:</label>
+          <span class="propertyText" id="opacitySelector">1</span><input type="range" value="1" min="0" max="1" step="0.1"
+            id="object-opacity">
+        </div> <br>
       </div>
 
       <div id="objectButtons">
@@ -48,13 +56,13 @@
         <button class="abstract" onclick="addSprite()">Sprite</button>
         <button class="abstract" onclick="createRectangle()">Rectangle</button>
         <button class="abstract" onclick="createCircle(canvas)">Circle</button>
-        <button class="abstract" onclick="Copy()">Copy</button>
-        <button class="abstract" onclick="Paste()">Paste</button>
+        <button class="abstract" onclick="copy()">Copy</button>
+        <button class="abstract" onclick="paste()">Paste</button>
       </div>
 
       <div id="animateButtons">
         <h3 id="animateTitle"> Animate Objects</h3>
-        <button class="abstract" onclick="moveLeft()">Move Left</button>
+        <button class="abstract" onclick="moveRect()">Animate</button>
       </div>
     </div>
 

@@ -18,10 +18,10 @@ body {
 	justify-content:space-evenly;
 }
 #leftBar {
-	display: flex;
-	flex-direction: column;
+	display: grid;
+	width: 30em;
 	justify-content:space-evenly;
-	margin-right: 20pt;
+	margin-right: 50pt;
 
 }
 
@@ -42,7 +42,7 @@ h3 {
 
 .abstract {
 	color: #090909;
-	padding: 0.7em 1.7em;
+	padding: 0.5em 1em;
 	font-size: 12px;
 	border-radius: 0.5em;
 	background: #e8e8e8;
@@ -51,6 +51,7 @@ h3 {
 	box-shadow: 4px 4px 12px #969696,
 				-4px -4px 12px #ffffff;
 	margin: 10px;
+	width: auto;
 }
 
 button:hover {
@@ -76,6 +77,9 @@ button:active {
 }
 #drawing-mode-options {
 	float: right;
+	flex-wrap: wrap;
+	display: flex;
+	
 }
 #canvasSection{
 	display: flex;
@@ -86,8 +90,7 @@ button:active {
 	outline-offset: 3px;
 	-webkit-border-radius: 5px;
 	border-radius: 5px;
-	height:100%;
-	width: 100%;
+
 	min-width: 500px;
 	max-width: 1500px;
 }
@@ -99,11 +102,7 @@ button:active {
 }
 
 .buttonBar {
-	display: flex;
-	flex-direction: row;
-	flex-grow: 0;
-	flex-flow: row;
-	align-content: stretch;
+	align-items: center;
 	
 }
 
