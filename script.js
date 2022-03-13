@@ -7,7 +7,7 @@ console.log("This is javascript");
 //function for creating the canvas, the function includes its parameters
 function initCanvas(id) {
 	return new fabric.Canvas(id, {
-		width: 800 ,
+		width: 800,
 		height: 600,
 		isDrawingMode: false,
 		selection: false,
@@ -17,7 +17,7 @@ function initCanvas(id) {
 		backgroundColor: "rgba(240, 240, 240, 1.0)",
 		selectionKey: "shiftKey",
 	});
-	
+
 }
 //setting the canvas background through URL
 function setBackground(url, canvas) {
@@ -29,7 +29,7 @@ function setBackground(url, canvas) {
 //creating a canvas that takes its options from the initCanvas function, the ID parameter is the canvas html ID
 const canvas = initCanvas("canvasID");
 
- //////////////////////////////////////////////////////////////////////////////////// VARIOUS SETTINGS
+//////////////////////////////////////////////////////////////////////////////////// VARIOUS SETTINGS
 //modes objects and currentMode variable
 const modes = {
 	pan: "panMode",
@@ -45,13 +45,14 @@ let color = "#000000";
 // updating the active mode button with the current mode
 function changeModeName() {
 	if (currentMode === "panMode") {
-		document.getElementById("currentModeDiv").innerHTML =  `Active Mode : <strong>Pan mode</strong>`
+		document.getElementById("currentModeDiv").innerHTML = `Active Mode : <strong>Pan mode</strong>`
 	}
 	else if (currentMode === "drawMode") {
-		document.getElementById("currentModeDiv").innerHTML =  `Active Mode : <strong>Draw mode</strong>`
+		document.getElementById("currentModeDiv").innerHTML = `Active Mode : <strong>Draw mode</strong>`
 	} else {
-		document.getElementById("currentModeDiv").innerHTML =  `Active Mode : <strong>Build/Select mode</strong>`
-	}	}
+		document.getElementById("currentModeDiv").innerHTML = `Active Mode : <strong>Build/Select mode</strong>`
+	}
+}
 // modifying the drawing width using the slider
 function setWidthListener() {
 	const widthPicker = document.getElementById("drawing-line-width");
@@ -62,17 +63,18 @@ function setWidthListener() {
 		document.getElementById("widthSelector").innerHTML = event.target.value;
 	});
 }
-
 // modifying the opacity  using the slider
 function setOpacityListener() {
 	const opacityPicker = document.getElementById("object-opacity");
 	var activeSelection = canvas.getActiveObject()
-	if (activeSelection !== "undefined") {
-	opacityPicker.addEventListener("change", function (event) {
-		console.log("The new opacity is :" + event.target.value);
-		document.getElementById("opacitySelector").innerHTML = event.target.value;
-		canvas.getActiveObject().opacity = Number(event.target.value);
-	});} else if (activeSelection === "undefined"){
+	if (activeSelection != "undefined") {
+		opacityPicker.addEventListener("change", function (event) {
+			console.log("The new opacity is :" + event.target.value);
+			document.getElementById("opacitySelector").innerHTML = event.target.value;
+			canvas.getActiveObject().opacity = Number(event.target.value);
+			canvas.renderAll();
+		});
+	} else if (activeSelection = "undefined") {
 		console.log("no active selection")
 	}
 }
@@ -86,7 +88,7 @@ function setColorListener() {
 		canvas.renderAll();
 	});
 }
- //////////////////////////////////////////////////////////////////////////////////// MODES
+//////////////////////////////////////////////////////////////////////////////////// MODES
 // clear canvas function
 function clearCanvas(canvas) {
 	canvas.getObjects().forEach(function (o) {
@@ -106,31 +108,34 @@ document.addEventListener('keydown', (event) => {
 	// Alert the key name and key code on keydown
 	if (name === 'Delete') {
 		clearSelection()
-	}})
+	}
+})
 
-	document.addEventListener('keydown', (event) => {
-		var name = event.key;
-		var code = event.code;
-		if (name === 'Control') {
-		  // Do nothing.
-		  return;
-		}
-		if (event.ctrlKey && name === 'c') {
-			copy()
-		} 
-	  }, false);
+// copy and paste using ctrl+c / ctrl+v
+document.addEventListener('keydown', (event) => {
+	var name = event.key;
+	var code = event.code;
+	if (name === 'Control') {
+		// Do nothing.
+		return;
+	}
+	if (event.ctrlKey && name === 'c') {
+		copy()
+	}
+}, false);
 
 document.addEventListener('keydown', (event) => {
-		var name = event.key;
-		var code = event.code;
-		if (name === 'Control') {
-		  // Do nothing.
-		  return;
-		}
-		if (event.ctrlKey && name === 'v') {
-			paste()
-		} 
-	  }, false);
+	var name = event.key;
+	var code = event.code;
+	if (name === 'Control') {
+		// Do nothing.
+		return;
+	}
+	if (event.ctrlKey && name === 'v') {
+		paste()
+	}
+}, false);
+
 //for the toggle pan button
 function togglePan() {
 	if (currentMode !== "panMode") {
@@ -168,7 +173,7 @@ function toggleDraw() {
 	}
 }
 
- //////////////////////////////////////////////////////////////////////////////////// OBJECT CREATION - COPY - PASTE
+//////////////////////////////////////////////////////////////////////////////////// OBJECT CREATION - COPY - PASTE
 
 // object creation functions
 function createRectangle() {
@@ -185,15 +190,15 @@ function createRectangle() {
 	canvas.add(rect);
 	canvas.renderAll();
 	console.log("create rectangle button");
-	rect.animate ('top', canvas.height/2, {
-		onChange:canvas.renderAll.bind(canvas),
-		duration : 1000,
+	rect.animate('top', canvas.height / 2, {
+		onChange: canvas.renderAll.bind(canvas),
+		duration: 1000,
 		easing: fabric.util.ease.easeInOutCubic,
 	})
-	rect.on('selected', function() {
+	rect.on('selected', function () {
 		//rect.opacity=0.75 ;
 	})
-	rect.on('deselected', function() {
+	rect.on('deselected', function () {
 		//rect.opacity=1 ;
 	})
 }
@@ -209,16 +214,16 @@ function createCircle(canvas) {
 	});
 	canvas.add(circle);
 	canvas.renderAll();
-	circle.animate ('top', canvas.height/2, {
-		onChange:canvas.renderAll.bind(canvas),
-		duration : 1000,
+	circle.animate('top', canvas.height / 2, {
+		onChange: canvas.renderAll.bind(canvas),
+		duration: 1000,
 		easing: fabric.util.ease.easeInOutCubic,
 	})
 	console.log("create circle button");
-	circle.on('selected', function() {
+	circle.on('selected', function () {
 		//circle.opacity=0.75 ;
 	})
-	circle.on('deselected', function() {
+	circle.on('deselected', function () {
 		//circle.opacity=1 ;
 	})
 }
@@ -227,9 +232,10 @@ function createCircle(canvas) {
 function copy() {
 	var activeSelection = canvas.getActiveObject()
 	if (activeSelection != null) {
-	canvas.getActiveObject().clone(function (cloned) {
-		_clipboard = cloned;
-	})}
+		canvas.getActiveObject().clone(function (cloned) {
+			_clipboard = cloned;
+		})
+	}
 }
 
 function paste() {
@@ -298,72 +304,74 @@ function setMouseEvents(canvas) {
 		canvas.setCursor("default");
 		canvas.renderAll();
 	});
-	
+
 }
 
 // zooming ability on canvas
-canvas.on('mouse:wheel', function(opt) {
-    var delta = opt.e.deltaY;
-    var zoom = canvas.getZoom();
-    zoom *= 0.999 ** delta;
-    if (zoom > 20) zoom = 20;
-    if (zoom < 0.01) zoom = 0.01;
-    this.setZoom(zoom);
-    opt.e.preventDefault();
-    opt.e.stopPropagation();
-  });
- 
- //////////////////////////////////////////////////////////////////////////////////// SPRITES
+canvas.on('mouse:wheel', function (opt) {
+	var delta = opt.e.deltaY;
+	var zoom = canvas.getZoom();
+	zoom *= 0.999 ** delta;
+	if (zoom > 20) zoom = 20;
+	if (zoom < 0.01) zoom = 0.01;
+	this.setZoom(zoom);
+	opt.e.preventDefault();
+	opt.e.stopPropagation();
+	canvas.renderAll();
+});
 
- function addSprite() {
-		//fabric.Object.prototype.originX = fabric.Object.prototype.originY = "center";
-		fabric.Object.prototype.transparentCorners = true;
-		i = canvas.width/2; //left
-		j = canvas.height/2; //top
-		fabric.Sprite.fromURL("lib/copper.png", createSprite(i, j));
+//////////////////////////////////////////////////////////////////////////////////// SPRITES
+
+function addSprite() {
+	//fabric.Object.prototype.originX = fabric.Object.prototype.originY = "center";
+	fabric.Object.prototype.transparentCorners = true;
+	i = canvas.width / 2; //left
+	j = canvas.height / 2; //top
+	fabric.Sprite.fromURL("lib/copper.png", createSprite(i, j));
 
 
-		function createSprite(i, j) {
-			return function (sprite) {
-				sprite.set({
-					left: i,
-					top: j,
-					opacity: 1,
-				});
-				sprite.on('selected', function() {
-					//sprite.opacity=0.75 ;
-				});
-				sprite.on('deselected', function() {
-					//sprite.opacity=1 ;
-				});
-				sprite.perPixelTargetFind = true
-				canvas.add(sprite);
-				sprite.play();
+	function createSprite(i, j) {
+		return function (sprite) {
+			sprite.set({
+				left: i,
+				top: j,
+				opacity: 1,
+			});
+			sprite.on('selected', function () {
+				//sprite.opacity=0.75 ;
+			});
+			sprite.on('deselected', function () {
+				//sprite.opacity=1 ;
+			});
+			sprite.perPixelTargetFind = true
+			canvas.add(sprite);
+			sprite.play();
 
-				console.log("sprite created");
-				/*setTimeout(function () {
-					sprite.set("dirty", true);
-				}, fabric.util.getRandomInt(1, 10) * 100); */
-			};
-		}
-		(function render() {
-			canvas.renderAll();
-			fabric.util.requestAnimFrame(render);
-		})();
- };
+			console.log("sprite created");
+			/*setTimeout(function () {
+				sprite.set("dirty", true);
+			}, fabric.util.getRandomInt(1, 10) * 100); */
+		};
+	}
+	(function render() {
+		canvas.renderAll();
+		fabric.util.requestAnimFrame(render);
+	})();
+};
 
 //////////////////////////////////////////////////////////////////////////////////// ANIMATE
 //the function moveRect apparently applies to all objects and not just rectangles
 function moveRect() {
 	var activeRect = canvas.getActiveObject()
 	if (activeRect != null) {
-		activeRect.animate('left', activeRect.left === 100 ? 400 : 100,  {
-		duration: 1000,
-		onChange: canvas.renderAll.bind(canvas),
-		easing: fabric.util.ease.easeInOutCubic,
-		})} else {
-			console.log ("no active selection")
-		}
+		activeRect.animate('left', activeRect.left === 0 ? Math.random() * canvas.width : Math.random() * canvas.width, {
+			duration: 2000,
+			onChange: canvas.renderAll.bind(canvas),
+			easing: fabric.util.ease.easeInOutCubic,
+		})
+	} else {
+		console.log("no active selection")
+	}
 }
 
 
