@@ -7,15 +7,12 @@ console.log("This is javascript");
 //function for creating the canvas, the function includes its parameters
 function initCanvas(id) {
 	return new fabric.Canvas(id, {
-		width: 800,
-		height: 600,
+		width: 1000,
+		height: 700,
 		isDrawingMode: false,
-		selection: false,
 		snapAngle: 10,
-		snapThreshold: 10,
 		skipTargetFind: false,
-		backgroundColor: "rgba(240, 240, 240, 1.0)",
-		selectionKey: "shiftKey",
+		backgroundColor: "white",
 	});
 
 }
@@ -100,8 +97,9 @@ function clearCanvas(canvas) {
 
 // clear Selection function
 function clearSelection() {
-	const e = canvas.getActiveObject();
-	canvas.remove(e)
+	const e = canvas.getActiveObjects();
+	e.forEach(element => canvas.remove(element));
+	
 }
 document.addEventListener('keydown', (event) => {
 	var name = event.key;
@@ -136,6 +134,17 @@ document.addEventListener('keydown', (event) => {
 	}
 }, false);
 
+
+
+// making group function
+let groupSelection = {};
+function groupObjects() {
+	console.log ('group objects button');
+	var selectedObjects = canvas.getActiveObjects();
+	groupSelection.value = new fabric.Group (selectedObjects);
+	clearSelection()
+	canvas.add(groupSelection.value);
+}
 //for the toggle pan button
 function togglePan() {
 	if (currentMode !== "panMode") {
@@ -203,7 +212,7 @@ function createRectangle() {
 	})
 }
 
-function createCircle(canvas) {
+function createCircle() {
 	var circle = new fabric.Circle({
 		radius: 50,
 		fill: color,
@@ -308,26 +317,24 @@ function setMouseEvents(canvas) {
 }
 
 // zooming ability on canvas
-canvas.on('mouse:wheel', function (opt) {
+canvas.on('mouse:wheel', function(opt) {
 	var delta = opt.e.deltaY;
 	var zoom = canvas.getZoom();
 	zoom *= 0.999 ** delta;
 	if (zoom > 20) zoom = 20;
 	if (zoom < 0.01) zoom = 0.01;
-	this.setZoom(zoom);
+	canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
 	opt.e.preventDefault();
 	opt.e.stopPropagation();
-	canvas.renderAll();
-});
+  });
 
 //////////////////////////////////////////////////////////////////////////////////// SPRITES
-
 function addSprite() {
 	//fabric.Object.prototype.originX = fabric.Object.prototype.originY = "center";
 	fabric.Object.prototype.transparentCorners = true;
 	i = canvas.width / 2; //left
 	j = canvas.height / 2; //top
-	fabric.Sprite.fromURL("lib/copper.png", createSprite(i, j));
+	fabric.Sprite.fromURL("lib/walking man 01 - horizontal sprite.png", createSprite(i, j));
 
 
 	function createSprite(i, j) {
@@ -336,6 +343,7 @@ function addSprite() {
 				left: i,
 				top: j,
 				opacity: 1,
+				//lockMovementY: true,
 			});
 			sprite.on('selected', function () {
 				//sprite.opacity=0.75 ;
@@ -359,6 +367,32 @@ function addSprite() {
 	})();
 };
 
+function hideShow() {
+	if (canvas.getActiveObject().visible = true) {
+		canvas.getActiveObject().visible = false;
+		canvas.renderAll();
+	} else {
+		canvas.getActiveObject().visible = true;
+		canvas.renderAll();
+	}
+}
+
+var spriteanimated = true;
+
+function stopAnimation() {
+		if (spriteanimated === true) {
+			spriteanimated = false;
+			console.log ("sprite animation is currently set to false");
+			sprite.stop();
+		} else {
+			spriteanimated = true;
+			console.log ("sprite animation is currently set to true");
+		}
+		(function render() {
+			canvas.renderAll();
+			fabric.util.requestAnimFrame(render);
+		})
+}
 //////////////////////////////////////////////////////////////////////////////////// ANIMATE
 //the function moveRect apparently applies to all objects and not just rectangles
 function moveRect() {
@@ -378,7 +412,7 @@ function moveRect() {
 
 
 setBackground(
-	"https://cdn.pixabay.com/photo/2016/11/23/13/48/beach-1852945_960_720.jpg",
+	"lib/section 3.jpg",
 	canvas,
 );
 setMouseEvents(canvas);
@@ -387,3 +421,9 @@ setColorListener();
 setWidthListener();
 setOpacityListener();
 //  document.getElementById("canvas-mode").innerHTML = currentMode
+
+/*
+To develop :
+1. the delete button only removes individual objects but not groups
+
+*/

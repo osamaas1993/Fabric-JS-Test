@@ -86,7 +86,7 @@ button:active {
   outline-offset: 3px;
   -webkit-border-radius: 5px;
   border-radius: 5px;
-
+  z-index: -1;
   min-width: 500px;
   max-width: 1500px;
 }
