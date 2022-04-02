@@ -32,6 +32,7 @@ const modes = {
   pan: "panMode",
   build: "buildMode",
   draw: "drawMode",
+  animate: "animateMode",
 };
 
 var currentMode = "buildMode";
@@ -49,6 +50,10 @@ function changeModeName() {
     document.getElementById(
       "currentModeDiv"
     ).innerHTML = `Active Mode : <strong>Draw mode</strong>`;
+  } else if (currentMode === "animateMode") {
+    document.getElementById(
+      "currentModeDiv"
+    ).innerHTML = `Active Mode : <strong>Animate mode</strong>`;
   } else {
     document.getElementById(
       "currentModeDiv"
@@ -174,7 +179,20 @@ function togglePan() {
   if (currentMode !== "panMode") {
     currentMode = "panMode";
     canvas.isDrawingMode = false;
-    canvas.skipTargetFind = true;
+    canvas.skipTargetFind = false;
+    console.log(currentMode);
+    removeCirclePointer();
+  } else {
+    (currentMode = "buildMode"), console.log(currentMode);
+  }
+}
+
+//for the toggle animate button
+function toggleAnimate() {
+  if (currentMode !== "animateMode") {
+    currentMode = "animateMode";
+    canvas.isDrawingMode = false;
+    canvas.skipTargetFind = false;
     console.log(currentMode);
   } else {
     (currentMode = "buildMode"), console.log(currentMode);
@@ -188,6 +206,7 @@ function toggleBuild() {
     canvas.skipTargetFind = false;
     canvas.isDrawingMode = false;
     console.log(currentMode);
+    removeCirclePointer();
   }
 }
 
@@ -200,6 +219,7 @@ function toggleDraw() {
     //drawing propoerties below
     canvas.freeDrawingBrush.strokeLineCap = "round"; //options are "butt" "round" "square"
     canvas.freeDrawingBrush.strokeLineJoin = "miter"; //options are "bevel", "round", "miter"
+    removeCirclePointer();
   } else {
     (currentMode = "buildMode"), console.log(currentMode);
     canvas.isDrawingMode = false;
@@ -406,24 +426,85 @@ function hideShow() {
 }
 
 //////////////////////////////////////////////////////////////////////////////////// ANIMATE
+// movement currently only takes into account LEFT coordinates of the target point
 
-function animateToLoop(x, y, duration = 1000) {
+function animateToLoop() {
   var activeObj = canvas.getActiveObject();
-  if (activeObj != null) {
+  if (activeObj != null && currentMode == "animateMode") {
     activeObj.animate(
       {
         left: document.getElementById("moveObjectX").value,
-        top: document.getElementById("moveObjectY").value,
+        //top: document.getElementById("moveObjectY").value,
       },
       {
-        duration: duration,
+        duration:
+          (Math.abs(
+            activeObj.left - document.getElementById("moveObjectX").value
+          ) /
+            Number(document.getElementById("animateSpeed").value)) *
+          100,
         onChange: canvas.renderAll.bind(canvas),
-        easing: fabric.util.ease.easeInOutCubic,
+        easing: fabric.util.ease.easeLinear,
       }
     );
-    console.log("animation complete with repeat checked");
+    console.log("animation complete with repeat unchecked");
   } else {
     console.log("no active selection");
+  }
+}
+
+// function to stop any on going animations
+function stopAnimation() {
+  var activeObj = canvas.getActiveObject();
+  if (activeObj != null && currentMode == "animateMode") {
+    activeObj.stop();
+    console.log("animation stopped");
+  } else {
+    console.log("no active selection");
+  }
+}
+
+// function that listens to when the user presses on an empty point with the shift button on the canvas when in Animate mode and uses coordinates for html inputs moveObjectX and moveObjectY
+function setMouseEvents(canvas) {
+  canvas.on("mouse:down", function (opt) {
+    activeSelection = canvas.getActiveObject();
+    if (opt.e.shiftKey && currentMode == "animateMode") {
+      var pointer = canvas.getPointer(opt.e);
+      document.getElementById("moveObjectX").value = pointer.x.toFixed(2);
+      document.getElementById("moveObjectY").value = pointer.y.toFixed(2);
+      var circle = new fabric.Circle({
+        radius: 5,
+        fill: "red",
+        left: pointer.x - 5,
+        top: pointer.y - 5,
+        hasBorders: false,
+        hasControls: false,
+        lockMovementX: true,
+        lockMovementY: true,
+        selectable: false,
+        opacity: 0.5,
+        name: "circlePointer",
+      });
+      canvas.add(circle);
+      console.log("pointer created");
+    }
+    // select activeSelection
+    if ((activeSelection = null)) {
+      canvas.setActiveObject(activeSelection);
+    }
+  });
+}
+
+// function that finds circle with name "circlePointer" and removes it
+function removeCirclePointer() {
+  var circle = canvas
+    .getObjects()
+    .filter((obj) => obj.name === "circlePointer");
+  if (circle) {
+    circle.forEach((obj) => canvas.remove(obj));
+    console.log("circlePointer removed");
+    document.getElementById("moveObjectX").value = 0;
+    document.getElementById("moveObjectY").value = 0;
   }
 }
 
@@ -494,7 +575,6 @@ setOpacityListener();
 
 /*
 To develop :
-2. error when changing color and there is not active selection
 */
 
 // function that pushes an element backwards
@@ -505,13 +585,3 @@ function pushBackwards() {
     canvas.renderAll();
   }
 }
-
-// function that listens to when the user presses on an empty point on the canvas and uses coordinates for html inputs moveObjectX and moveObjectY
-canvas.on("mouse:down", function (options) {
-  var pointer = canvas.getPointer(options.e);
-  var activeObj = canvas.getActiveObject();
-  if (activeObj == null) {
-    document.getElementById("moveObjectX").value = pointer.x;
-    document.getElementById("moveObjectY").value = pointer.y;
-  }
-});
