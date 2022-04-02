@@ -7,12 +7,13 @@ console.log("This is javascript");
 //function for creating the canvas, the function includes its parameters
 function initCanvas(id) {
   return new fabric.Canvas(id, {
+    height: window.innerHeight * 0.8,
     width: 1000,
-    height: 700,
     isDrawingMode: false,
     snapAngle: 10,
     skipTargetFind: false,
     backgroundColor: "white",
+    uniformScaling: false,
   });
 }
 //setting the canvas background through URL
@@ -88,7 +89,9 @@ function setColorListener() {
     console.log(event.target.value);
     const e = canvas.getActiveObjects();
     canvas.freeDrawingBrush.color = color;
-    canvas.getActiveObject().fill = color;
+    if (canvas.getActiveObject()) {
+      canvas.getActiveObject().fill = color;
+    }
     canvas.renderAll();
   });
 }
@@ -403,27 +406,28 @@ function hideShow() {
 }
 
 //////////////////////////////////////////////////////////////////////////////////// ANIMATE
-//the function moveRect apparently applies to all objects and not just rectangles
-function moveRect() {
-  var activeRect = canvas.getActiveObject();
-  if (activeRect != null) {
-    activeRect.animate(
-      "left",
-      activeRect.left === 0
-        ? Math.random() * canvas.width
-        : Math.random() * canvas.width,
+
+function animateToLoop(x, y, duration = 1000) {
+  var activeObj = canvas.getActiveObject();
+  if (activeObj != null) {
+    activeObj.animate(
       {
-        duration: 2000,
+        left: document.getElementById("moveObjectX").value,
+        top: document.getElementById("moveObjectY").value,
+      },
+      {
+        duration: duration,
         onChange: canvas.renderAll.bind(canvas),
         easing: fabric.util.ease.easeInOutCubic,
       }
     );
+    console.log("animation complete with repeat checked");
   } else {
     console.log("no active selection");
   }
 }
 
-//////////////////////////////////////////////////////////////////////////////////// BUTTON POSITIONING
+//////////////////////////////////////////////////////////////////////////////////// HTML BUTTON POSITIONING ON CANVAS
 var btn = document.getElementById("currentModeDiv"),
   btnWidth = 85,
   btnHeight = 18;
@@ -432,6 +436,51 @@ function positionBtn(obj) {
   var absCoords = canvas.getAbsoluteCoords(obj);
   btn.style.left = absCoords.left - btnWidth / 2 + "px";
   btn.style.top = absCoords.top - btnHeight / 2 + "px";
+}
+
+//////////////////////////////////////////////////////////////////////////////////// IMPORTING IMAGES TO CANVAS
+// function that imports an uploaded image to the canvas as in object
+document.getElementById("file").addEventListener("change", function (e) {
+  var file = e.target.files[0];
+  var reader = new FileReader();
+  reader.onload = function (f) {
+    var data = f.target.result;
+    fabric.Image.fromURL(data, function (img) {
+      var oImg = img.set({ left: 50, top: 100, angle: 00 }).scale(1);
+      canvas.add(oImg).renderAll();
+      canvas.setActiveObject(oImg);
+      //var dataURL = canvas.toDataURL({ format: "jpeg", quality: 0.8 });
+      //console.log("Canvas Image " + dataURL);
+      //document.getElementById("txt").href = dataURL;
+    });
+  };
+  reader.readAsDataURL(file);
+});
+
+// getting the image uploaded to id "fileBackground" and setting it as background to the canvas
+document
+  .getElementById("fileBackground")
+  .addEventListener("change", function (e) {
+    var file = e.target.files[0];
+    var reader = new FileReader();
+    reader.onload = function (f) {
+      var data = f.target.result;
+      fabric.Image.fromURL(data, function (img) {
+        var oImg = img.set({ left: 0, top: 0, angle: 00 }).scale(1);
+        canvas.setBackgroundImage(oImg, canvas.renderAll.bind(canvas));
+        canvas.renderAll();
+      });
+    };
+    reader.readAsDataURL(file);
+  });
+
+// a downloadImage function that exports the canvas as an image
+function downloadImage() {
+  var image = canvas.toDataURL("image/png");
+  var link = document.createElement("a");
+  link.download = "canvas.png";
+  link.href = image;
+  link.click();
 }
 
 ////////////////////////////////////////
@@ -445,6 +494,24 @@ setOpacityListener();
 
 /*
 To develop :
-1. the delete button only removes individual objects but not groups
 2. error when changing color and there is not active selection
 */
+
+// function that pushes an element backwards
+function pushBackwards() {
+  var activeObject = canvas.getActiveObject();
+  if (activeObject) {
+    activeObject.sendBackwards();
+    canvas.renderAll();
+  }
+}
+
+// function that listens to when the user presses on an empty point on the canvas and uses coordinates for html inputs moveObjectX and moveObjectY
+canvas.on("mouse:down", function (options) {
+  var pointer = canvas.getPointer(options.e);
+  var activeObj = canvas.getActiveObject();
+  if (activeObj == null) {
+    document.getElementById("moveObjectX").value = pointer.x;
+    document.getElementById("moveObjectY").value = pointer.y;
+  }
+});

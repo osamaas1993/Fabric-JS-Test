@@ -1,4 +1,5 @@
 /** @format */
+
 body {
   display: flex;
   flex-direction: column;
@@ -9,6 +10,20 @@ body {
   min-width: 700px;
   max-width: 1500px;
   margin: 0 auto;
+  overflow: hidden;
+  background-color: #e8e8e8;
+}
+
+p {
+  font-size: 0.8rem;
+  font-family: Arial, Helvetica, sans-serif;
+  color: rgb(94, 94, 94);
+  margin: 0;
+  padding: 0;
+}
+
+#downloadButton {
+  align-content: center;
 }
 
 #workBody {
@@ -16,12 +31,37 @@ body {
   flex-flow: row;
   flex-direction: row;
   justify-content: space-evenly;
+  height: 80%;
 }
-#leftBar {
-  display: grid;
-  width: 30em;
-  justify-content: space-evenly;
-  margin-right: 50pt;
+
+#sidebar {
+  position: fixed;
+  width: 20%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: #e8e8e8;
+  z-index: 1;
+  overflow-y: scroll;
+  padding-left: 20px;
+  padding-top: 50px;
+}
+
+#canvasSection {
+  display: flex;
+  flex-direction: column;
+  align-content: flex-end;
+  width: 80%;
+}
+#canvasID {
+  outline: 3px dashed rgba(28, 110, 164, 0.5);
+  outline-offset: 3px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  z-index: -1;
+  min-width: 500px;
+  max-width: 1500px;
+  left: 20em;
 }
 
 h1 {
@@ -36,10 +76,10 @@ h3 {
   color: rgba(78, 78, 255, 0.8);
   font-size: 14px;
   font-family: Arial, Helvetica, sans-serif;
-  margin-top: 25px;
+  margin-top: 2ex;
 }
 
-.abstract {
+/*.abstract {
   color: #090909;
   padding: 0.5em 1em;
   font-size: 12px;
@@ -50,6 +90,9 @@ h3 {
   box-shadow: 4px 4px 12px #969696, -4px -4px 12px #ffffff;
   margin: 10px;
   width: auto;
+}*/
+button {
+  margin: 1ex;
 }
 
 button:hover {
@@ -77,33 +120,12 @@ button:active {
   flex-wrap: wrap;
   display: flex;
 }
-#canvasSection {
-  display: flex;
-  flex-direction: column;
-}
-#canvasID {
-  outline: 3px dashed rgba(28, 110, 164, 0.5);
-  outline-offset: 3px;
-  -webkit-border-radius: 5px;
-  border-radius: 5px;
-  z-index: -1;
-  min-width: 500px;
-  max-width: 1500px;
-}
 
 .propertiesContainer {
   display: flex;
   flex-direction: row;
 }
 
-.buttonBar {
-  align-items: center;
-}
-
 #drawing-mode-options {
   float: left;
-}
-
-body {
-  background-color: #e8e8e8;
 }

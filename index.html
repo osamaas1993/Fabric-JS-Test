@@ -15,7 +15,20 @@
   <h1>My Workspace</h1>
   <hr />
   <div id="workBody">
-    <div id="leftBar">
+    <div id="sidebar">
+        <h3>Upload</h3>
+        <!--uploading image to canvas-->
+        <form action="upload.php" method="post" enctype="multipart/form-data">
+          <p>Import image to canvas</p> <input type="file" name="file" id="file" class="abstract" />
+        </form>
+        <!--uploading image as background-->
+        <form action="upload.php" method="post" enctype="multipart/form-data">
+          <p>Import image to canvas</p> <input type="file" name="file" id="fileBackground" class="abstract" />
+        </form>
+        <br>
+      <!-- a button to download the image that is currently on the canvas-->
+      <button id="downloadButton" class="abstract" onclick="downloadImage()">Download Image</button>
+
       <h3>Canvas Modes</h3>
       <button id="currentModeDiv" class="abstract" disabled>Active Mode : <strong>Build/Select mode</strong></button>
       <div id="buttonBar">
@@ -24,7 +37,6 @@
         <button class="abstract" onclick="toggleBuild(), changeModeName()">Build/Select mode</button>
         <button class="abstract" onclick="clearCanvas(canvas)">Clear all</button>
         <button class="abstract" onclick="clearSelection(canvas)">Delete</button>
-
       </div>
       <br />
 
@@ -58,12 +70,16 @@
         <button class="abstract" onclick="paste()">Paste</button>
         <button class="abstract" onclick="groupObjects()">Group</button>
         <button class="abstract" onclick="unGroupObjects()">Ungroup</button>
+        <button class="abstract" onclick="hideShow()">Hide</button>
       </div>
 
       <div id="animateButtons">
         <h3 id="animateTitle"> Animate Objects</h3>
-        <button class="abstract" onclick="moveRect()">Animate</button>
-        <button class="abstract" onclick="hideShow()">Hide</button>
+        <button class="abstract" onclick="animateToLoop()" id="animateButton">Animate</button>
+        <!-- checkbox called repeat--> <input type="checkbox" id="move" />
+        <input type="number" id="moveObjectX" value="0" min="0" max="500" step="1" />
+        <input type="number" id="moveObjectY" value="0" min="0" max="500" step="1" />
+
 
       </div>
     </div>
