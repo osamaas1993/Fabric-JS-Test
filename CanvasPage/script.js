@@ -565,7 +565,7 @@ function downloadImage() {
 }
 
 ////////////////////////////////////////
-setBackground("lib/section 3.jpg", canvas);
+setBackground("/lib/section 3.jpg", canvas);
 setMouseEvents(canvas);
 
 setColorListener();
