@@ -1,0 +1,221 @@
+html,
+body {
+    margin: 0;
+    height: 100%;
+}
+
+.parent {
+    /* background color is a gradient*/
+
+    display: grid;
+    grid-template-columns: 0.5fr 1fr 1fr 0.5fr;
+    grid-template-rows: 30pt 0.5fr 270pt 0.4fr 0.2fr;
+    grid-column-gap: 10px;
+    grid-row-gap: 6px;
+    background: linear-gradient(127deg, #34297C 0%, #C4E8EB 100%) 0% 0% / cover no-repeat padding-box;
+    height: 100%;
+
+}
+
+button {
+    cursor: pointer;
+    position: relative;
+    /* border gradient*/
+    border: 1pt #C4E8EB solid;
+}
+
+.div1 {
+    grid-area: 1 / 1 / 2 / 5;
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    opacity: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+    padding-left: 15pt;
+}
+
+.logoIcon {
+    height: 20pt;
+    margin-right: 15pt;
+    padding-top: 3pt;
+}
+
+label {
+    font-size: 0.8rem;
+    font-family: Arial, Helvetica, sans-serif;
+    color: rgb(94, 94, 94);
+    margin: 0;
+    padding: 0;
+}
+
+.div2 {
+    grid-area: 3 / 2 / 4 / 3;
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid #BCE0FD;
+    opacity: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 100%;
+    justify-self: end;
+    max-height: 320pt;
+    padding-left: 20pt;
+    padding-right: 20pt;
+    padding-top: 15pt;
+    padding-bottom: 15pt;
+    min-width: 175pt;
+    max-width: 200pt;
+}
+
+
+.buttonText {
+    text-align: center;
+    font: normal normal normal 16px/20px Proxima Nova;
+    letter-spacing: 0px;
+    color: #FFFFFF;
+    opacity: 1;
+}
+
+.div3 {
+    grid-area: 3 / 3 / 4 / 4;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+    justify-self: start;
+    height: 100%;
+    max-height: 320pt;
+}
+
+.div3-1,
+.div3-2,
+.div3-3 {
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid #BCE0FD;
+    padding-left: 20pt;
+    padding-right: 20pt;
+    padding-top: 15pt;
+    padding-bottom: 15pt;
+    min-width: 175pt;
+    max-width: 200pt;
+    text-align: center;
+}
+
+.div4 {
+    grid-area: 5 / 2 / 6 / 4;
+    text-align: center;
+    font: normal normal bold 13px/19px Montserrat;
+    letter-spacing: 0.39px;
+    color: #3D3D3D;
+    letter-spacing: var(--unnamed-character-spacing-0-39);
+    height: 100%;
+    gap: 5pt;
+}
+
+
+h2 {
+    text-align: left;
+    font: normal normal normal 14px/20px Adobe Clean;
+    letter-spacing: 0px;
+    color: #323232;
+    opacity: 1;
+    margin-right: 2pt;
+    border-bottom: #323232 2pt solid;
+    padding-bottom: 7pt;
+    padding-top: 7pt;
+    padding-left: 10pt;
+    padding-right: 10pt;
+}
+
+h3 {
+    text-align: left;
+    font: normal normal bold 38px Proxima Nova;
+    letter-spacing: 0.28px;
+    color: #1C2126;
+    opacity: 1;
+    margin-top: 0pt;
+    margin-bottom: 0pt;
+}
+
+h4 {
+    text-align: left;
+    font: normal normal bold 15px Proxima Nova;
+    letter-spacing: -0.09px;
+    color: #1C2126;
+    opacity: 1;
+    margin-top: 0pt;
+    margin-bottom: 0pt;
+
+}
+
+h5 {
+    text-align: left;
+    font: normal normal normal 14px Proxima Nova;
+    letter-spacing: 0px;
+    color: #2e2e2e;
+    opacity: 1;
+}
+
+.pLink {
+    text-align: left;
+    font: normal normal normal 16px/20px Proxima Nova;
+    letter-spacing: 0px;
+    color: #382E7F;
+    opacity: 1;
+
+}
+
+#checkbox1 {
+    background: #382E7F 0% 0% no-repeat padding-box;
+    border-radius: 8px;
+    opacity: 1;
+}
+
+.checkbox {
+    text-align: center;
+    margin-top: 5pt;
+    margin-bottom: 5pt;
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+    height: 20pt;
+}
+
+.form-control {
+    background-color: #f7f7f7;
+    border-radius: 16px;
+    border: 0px;
+    height: 35pt;
+    width: 100%;
+    margin-top: 5pt;
+    margin-bottom: 5pt;
+    z-index: 950;
+}
+
+input {
+    text-align: left;
+    text-indent: 20px;
+}
+
+.signInButton {
+    background: #382E7F;
+    border-radius: 100px;
+
+    width: 100%;
+    height: 40pt;
+
+}
+
+.navButton {
+    background: #382E7F 0% 0% no-repeat padding-box;
+    border-radius: 4px;
+    opacity: 1;
+    width: 100%;
+    height: 30pt;
+}
+
+.folderIcon {
+    height: 30pt;
+}

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/Login Page/login-css.css" />
+    <title>Login</title>
+</head>
+
+<body>
+    <div class="parent">
+        <div class="div1">
+            <div>
+                <img src="/Login Page/lib/logo.png" alt="logo icon" class="logoIcon">
+            </div>
+            <div>
+                <h2>Home</h2>
+            </div>
+            <div>
+                <h2>Projects</h2>
+            </div>
+            <div>
+                <h2>Examples</h2>
+            </div>
+        </div>
+        <div class="div2">
+            <h3>Sign In</h3>
+            <h4>New user? <a href="signup.html" class="pLink">Create an account</a></h4>
+            <div class="form-group">
+                <input type="text" class="form-control" id="username" name="username" placeholder="Username or email">
+                <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+            </div>
+            <div class="checkbox">
+                <input type="checkbox" id="checkbox1" name="checkbox" />
+                <label for="checkbox1">
+                    <h5>Keep me signed in</h5>
+                </label>
+            </div>
+            <button type="submit" class="signInButton" name="submit">
+                <div class="buttonText">Sign In</div>
+            </button>
+        </div>
+
+        <div class="div3">
+            <div class="div3-1">
+                <img src="/Login Page/lib/001-folder.png" alt="folder icon" class="folderIcon">
+                <button class="navButton" onclick="window.location.href='user-projects.html'">
+                    <div class="buttonText">Projects</div>
+            </div>
+            <div class="div3-2">
+                <button class="navButton" onclick="window.location.href='examples.html'">
+                    <div class="buttonText">Examples</div>
+            </div>
+            <div class="div3-3">
+                <div>
+                    <button class="navButton" onclick="window.location.href='open.html'" style="margin-bottom: 10pt;">
+                        <div class="buttonText">Open</div>
+                </div>
+
+                <div>
+                    <button class="navButton" onclick="window.location.href='open.html'">
+                        <div class="buttonText">Save</div>
+                </div>
+            </div>
+        </div>
+        <div class="div4"> contact@todwell.com <BR>
+            <div style="margin-top: 10pt;">Copyright © 2021 ToDwell. All rights reserved.</div>
+        </div>
+    </div>
+</body>
+
+</html>
