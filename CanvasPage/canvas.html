@@ -12,18 +12,21 @@
 </head>
 
 <body id="body">
-  <h1>My Workspace</h1>
-  <hr />
-  <div id="workBody">
-    <div id="sidebar">
+  <div class="parent">
+    <div class="space1">
+      <h1>My Workspace</h1>
+    </div>
+    <div class="space2">
+
       <h3>Upload</h3>
       <!--uploading image to canvas-->
       <form action="upload.php" method="post" enctype="multipart/form-data">
         <p>Import image to canvas</p> <input type="file" name="file" id="file" class="abstract" />
       </form>
+      <br>
       <!--uploading image as background-->
       <form action="upload.php" method="post" enctype="multipart/form-data">
-        <p>Import image to canvas</p> <input type="file" name="file" id="fileBackground" class="abstract" />
+        <p>Import image as background</p> <input type="file" name="file" id="fileBackground" class="abstract" />
       </form>
       <br>
       <!-- a button to download the image that is currently on the canvas-->
@@ -82,12 +85,10 @@
         <p>Y Coordinates</p><input type="number" id="moveObjectY" value="0" min="0" step="1" />
         <p>Speed</p><input type="number" id="animateSpeed" value="1" min="0" step="1" />
         <button class="abstract" onclick="removeCirclePointer()">Remove Pointers</button>
-
-
       </div>
     </div>
 
-    <div id="canvasSection">
+    <div class="space3">
       <!-- <p id="canvas-mode"></p> -->
       <canvas id="canvasID"></canvas>
 

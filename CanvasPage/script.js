@@ -379,7 +379,8 @@ function addSprite() {
   i = canvas.width / 2; //left
   j = canvas.height / 2; //top
   fabric.Sprite.fromURL(
-    "lib/walking man 01 - horizontal sprite.png",
+    "/lib/walking man 01 - horizontal sprite.png",
+
     createSprite(i, j)
   );
 
