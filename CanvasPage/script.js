@@ -370,6 +370,7 @@ canvas.on("mouse:wheel", function (opt) {
   canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
   opt.e.preventDefault();
   opt.e.stopPropagation();
+
 });
 
 //////////////////////////////////////////////////////////////////////////////////// SPRITES
@@ -603,8 +604,8 @@ function pushForwards() {
 
   fabric.Canvas.prototype.getAbsoluteCoords = function (object) {
     return {
-      left: object.left + this._offset.left,
-      top: object.top + this._offset.top,
+      left: object.left,
+      top: object.top,
     };
   };
 
@@ -614,13 +615,38 @@ function pushForwards() {
   function positionBtnAbove(obj) {
     var activeObject = canvas.getActiveObject();
     if (activeObject) {
+      // add 1 second delay
+      
+      btn.hidden = false;
       var absCoords = canvas.getAbsoluteCoords(obj);
-      btn.style.left = absCoords.left - btnWidth / 2 + "px";
-      btn.style.top = absCoords.top - btnHeight / 2 + "px";
+      //take into account canvas zoom level
+      var scale = canvas.getZoom();
+      btn.style.left = absCoords.left * scale + "px";
+      btn.style.top = absCoords.top * scale + "px";
+    
     }
   }
-  //whenever the mouse moves over canvas object, position btn above it
-  canvas.on("mouse:move", function (opt) {
-    positionBtnAbove(opt.target);
+
+  //when an object is selected and moved, execute positionBtnAbove, when an object is deselected, hide the button
+
+  canvas.on("selection:cleared", function (e) {
+    btn.hidden = true;
   });
+   
+  
+  canvas.on("mouse:move", function (opt) {
+    // verify if mouse is on top of an object
+    var pointer = canvas.getPointer(opt.e);
+    var activeObject = canvas.getActiveObject();
+    if (activeObject) {
+      var object = canvas.findTarget(pointer);
+      if (object == activeObject) {
+        positionBtnAbove(object); 
+      }
+    }
+  });
+
+
 })();
+
+
