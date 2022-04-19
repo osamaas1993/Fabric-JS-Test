@@ -26,13 +26,13 @@ p {
   align-content: center;
 }
 
-#workBody {
+/*#workBody {
   display: flex;
   flex-flow: row;
   flex-direction: row;
   justify-content: space-evenly;
   height: 80%;
-}
+}*/
 
 #sidebar {
   position: fixed;
@@ -48,11 +48,10 @@ p {
 }
 
 #canvasSection {
-  display: flex;
-  flex-direction: column;
-  align-content: flex-end;
-  width: 80%;
+
+  margin-left: 250pt;
 }
+
 #canvasID {
   outline: 3px dashed rgba(28, 110, 164, 0.5);
   outline-offset: 3px;
@@ -112,9 +111,11 @@ button:active {
   margin-block-end: 0px;
   vertical-align: 5px;
 }
+
 #colorpicker {
   width: 10px;
 }
+
 #drawing-mode-options {
   float: right;
   flex-wrap: wrap;

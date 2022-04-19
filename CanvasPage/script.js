@@ -379,7 +379,7 @@ function addSprite() {
   i = canvas.width / 2; //left
   j = canvas.height / 2; //top
   fabric.Sprite.fromURL(
-    "lib/walking man 01 - horizontal sprite.png",
+    "/lib/walking man 01 - horizontal sprite.png",
     createSprite(i, j)
   );
 
@@ -430,7 +430,11 @@ function hideShow() {
 
 function animateToLoop() {
   var activeObj = canvas.getActiveObject();
-  if (activeObj != null && currentMode == "animateMode") {
+  if (
+    activeObj != null &&
+    currentMode == "animateMode" &&
+    activeObj.type == "sprite"
+  ) {
     activeObj.animate(
       {
         left: document.getElementById("moveObjectX").value,
@@ -448,12 +452,18 @@ function animateToLoop() {
       }
     );
     console.log("animation complete with repeat unchecked");
+  } else if (
+    activeObj != null &&
+    currentMode == "animateMode" &&
+    activeObj.type !== "sprite"
+  ) {
+    console.log("no sprite selected");
   } else {
     console.log("no active selection");
   }
 }
 
-// function to stop any on going animations
+// function to stop any on going animations ???????????????
 function stopAnimation() {
   var activeObj = canvas.getActiveObject();
   if (activeObj != null && currentMode == "animateMode") {
@@ -506,17 +516,6 @@ function removeCirclePointer() {
     document.getElementById("moveObjectX").value = 0;
     document.getElementById("moveObjectY").value = 0;
   }
-}
-
-//////////////////////////////////////////////////////////////////////////////////// HTML BUTTON POSITIONING ON CANVAS
-var btn = document.getElementById("currentModeDiv"),
-  btnWidth = 85,
-  btnHeight = 18;
-
-function positionBtn(obj) {
-  var absCoords = canvas.getAbsoluteCoords(obj);
-  btn.style.left = absCoords.left - btnWidth / 2 + "px";
-  btn.style.top = absCoords.top - btnHeight / 2 + "px";
 }
 
 //////////////////////////////////////////////////////////////////////////////////// IMPORTING IMAGES TO CANVAS
@@ -576,6 +575,7 @@ setOpacityListener();
 /*
 To develop :
 */
+//////////////////////////////////////////////////////////////////////////////////// ELEMENTS ORDER ON CANVAS
 
 // function that pushes an element backwards
 function pushBackwards() {
@@ -585,3 +585,42 @@ function pushBackwards() {
     canvas.renderAll();
   }
 }
+
+// function that pushes an element forwards
+function pushForwards() {
+  var activeObject = canvas.getActiveObject();
+  if (activeObject) {
+    activeObject.bringForward();
+    canvas.renderAll();
+  }
+}
+
+//////////////////////////////////////////////////////////////////////////////////// HTML BUTTON POSITIONING ON CANVAS
+
+// function that positions btn above the selected object if an object is selected
+(function () {
+  //fabric.Object.prototype.originX = fabric.Object.prototype.originY = "center";
+
+  fabric.Canvas.prototype.getAbsoluteCoords = function (object) {
+    return {
+      left: object.left + this._offset.left,
+      top: object.top + this._offset.top,
+    };
+  };
+
+  var btn = document.getElementById("hover");
+  (btnWidth = 85), (btnHeight = 18);
+
+  function positionBtnAbove(obj) {
+    var activeObject = canvas.getActiveObject();
+    if (activeObject) {
+      var absCoords = canvas.getAbsoluteCoords(obj);
+      btn.style.left = absCoords.left - btnWidth / 2 + "px";
+      btn.style.top = absCoords.top - btnHeight / 2 + "px";
+    }
+  }
+  //whenever the mouse moves over canvas object, position btn above it
+  canvas.on("mouse:move", function (opt) {
+    positionBtnAbove(opt.target);
+  });
+})();
