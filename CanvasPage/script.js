@@ -1,13 +1,20 @@
 /* @format */
 
 console.log("This is javascript");
+// set canvas width and height to the window width and height
+function setCanvasSize() {
+  canvas.setHeight(Number(window.innerHeight));
+  canvas.setWidth(Number(window.innerWidth));
+}
+
+
 
 //////////////////////////////////////////////////////////////////////////////////// CANVAS CREATION
 
 //function for creating the canvas, the function includes its parameters
 function initCanvas(id) {
   return new fabric.Canvas(id, {
-    height: window.innerHeight * 0.8,
+    height: 1000,
     width: 1000,
     isDrawingMode: false,
     snapAngle: 10,
