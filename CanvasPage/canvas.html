@@ -9,6 +9,9 @@
   <title>My Fabric JS Test</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+  <link rel="stylesheet" href="https://fonts.sandbox.google.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@48,400,0,0" />
+  <link rel="stylesheet" href="https://fonts.sandbox.google.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,0,0" />
+  <link rel="stylesheet" href="https://fonts.sandbox.google.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
 </head>
 
 <body id="body"onload="setCanvasSize()" onresize="setCanvasSize()">
@@ -25,17 +28,19 @@
       </form>
       <br>
       <!-- a button to download the image that is currently on the canvas-->
-      <button id="downloadButton" class="abstract" onclick="downloadImage()">Download Image</button>
+      <p>Download Canvas</p>
+      <button id="downloadButton" class="material-symbols-rounded" onclick="downloadImage()">download</button> 
+      <hr>
 
       <h3>Canvas Modes</h3>
       <button id="currentModeDiv" class="abstract" disabled>Active Mode : <strong>Build/Select mode</strong></button>
       <div id="buttonBar">
-        <button class="abstract" onclick="togglePan(), changeModeName()">Pan mode</button>
-        <button class="abstract" onclick="toggleAnimate(), changeModeName()">Animate mode</button>
-        <button class="abstract" onclick="toggleDraw(), changeModeName()">Draw mode</button>
-        <button class="abstract" onclick="toggleBuild(), changeModeName()">Build/Select mode</button>
-        <button class="abstract" onclick="clearCanvas(canvas)">Clear all</button>
-        <button class="abstract" onclick="clearSelection(canvas)">Delete</button>
+        <button class="material-symbols-rounded" onclick="togglePan(), changeModeName()">front_hand</button>
+        <button class="material-symbols-outlined" onclick="toggleAnimate(), changeModeName()">animation</button>
+        <button class="material-symbols-outlined" onclick="toggleDraw(), changeModeName()">draw</button>
+        <button class="material-symbols-outlined" onclick="toggleBuild(), changeModeName()">build</button>
+        <button class="material-symbols-outlined" onclick="clearCanvas(canvas)">layers_clear</button>
+        <button class="material-symbols-outlined" onclick="clearSelection(canvas)">delete</button>
       </div>
       <br />
 
@@ -62,14 +67,16 @@
 
       <div id="objectButtons">
         <h3 id="objectsTitle"> Create Objects</h3>
-        <button class="abstract" onclick="addSprite()">Sprite</button>
-        <button class="abstract" onclick="createRectangle()">Rectangle</button>
-        <button class="abstract" onclick="createCircle(canvas)">Circle</button>
-        <button class="abstract" onclick="copy()">Copy</button>
-        <button class="abstract" onclick="paste()">Paste</button>
-        <button class="abstract" onclick="groupObjects()">Group</button>
-        <button class="abstract" onclick="unGroupObjects()">Ungroup</button>
-        <button class="abstract" onclick="hideShow()">Hide</button>
+        <button class="material-symbols-outlined" onclick="addSprite()">directions_walk</button>
+        <button class="material-symbols-sharp" onclick="createRectangle()">crop_square</button>
+        <button class="material-symbols-outlined" onclick="createCircle(canvas)">circle</button>
+        <button class="material-symbols-sharp" onclick="createTriangle()">change_history</button>
+        <button class="material-symbols-sharp" onclick="addTextBox()">text</button>
+        <button class="material-symbols-outlined" onclick="copy()">content_copy</button>
+        <button class="material-symbols-outlined" onclick="paste()">content_paste</button>
+        <button class="material-symbols-outlined" onclick="groupObjects()">group_work</button>
+        <button class="material-symbols-outlined" onclick="unGroupObjects()">workspaces</button>
+
       </div>
 
       <div id="animateButtons">

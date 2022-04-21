@@ -21,6 +21,7 @@ function initCanvas(id) {
     skipTargetFind: false,
     backgroundColor: "white",
     uniformScaling: false,
+    selection: true,
   });
 }
 //setting the canvas background through URL
@@ -189,6 +190,7 @@ function togglePan() {
     canvas.skipTargetFind = false;
     console.log(currentMode);
     removeCirclePointer();
+
   } else {
     (currentMode = "buildMode"), console.log(currentMode);
   }
@@ -201,6 +203,7 @@ function toggleAnimate() {
     canvas.isDrawingMode = false;
     canvas.skipTargetFind = false;
     console.log(currentMode);
+    canvas.selection = true;
   } else {
     (currentMode = "buildMode"), console.log(currentMode);
   }
@@ -214,6 +217,7 @@ function toggleBuild() {
     canvas.isDrawingMode = false;
     console.log(currentMode);
     removeCirclePointer();
+    canvas.selection = true;
   }
 }
 
@@ -227,6 +231,7 @@ function toggleDraw() {
     canvas.freeDrawingBrush.strokeLineCap = "round"; //options are "butt" "round" "square"
     canvas.freeDrawingBrush.strokeLineJoin = "miter"; //options are "bevel", "round", "miter"
     removeCirclePointer();
+    canvas.selection = true;
   } else {
     (currentMode = "buildMode"), console.log(currentMode);
     canvas.isDrawingMode = false;
@@ -286,6 +291,65 @@ function createCircle() {
   });
   circle.on("deselected", function () {
     //circle.opacity=1 ;
+  });
+}
+
+function createTriangle() {
+  var triangle = new fabric.Triangle({
+    width: 100,
+    height: 100,
+    fill: color,
+    top: -50,
+    left: canvas.width / 2,
+    originX: "center",
+    originY: "center",
+    objectCaching: false,
+  });
+  canvas.add(triangle);
+  canvas.renderAll();
+  triangle.animate("top", canvas.height / 2, {
+    onChange: canvas.renderAll.bind(canvas),
+    duration: 1000,
+    easing: fabric.util.ease.easeInOutCubic,
+  });
+  console.log("create triangle button");
+  triangle.on("selected", function () {
+    //triangle.opacity=0.75 ;
+  });
+  triangle.on("deselected", function () {
+    //triangle.opacity=1 ;
+  });
+}
+
+function createPolygon() {
+  var polygon = new fabric.Polygon(
+    [
+      { x: -50, y: -50 },
+      { x: 50, y: -50 },
+      { x: 0, y: 50 },
+    ],
+    {
+      fill: color,
+      top: -50,
+      left: canvas.width / 2,
+      originX: "center",
+      originY: "center",
+      objectCaching: false,
+    }
+  );
+  canvas.add(polygon);
+  canvas.renderAll();
+  polygon.animate("top", canvas.height / 2, {
+    onChange: canvas.renderAll.bind(canvas),
+    duration: 1000,
+    easing: fabric.util.ease.easeInOutCubic,
+  });
+  console.log("create polygon button");
+  polygon.on("selected", function () {
+    //polygon.opacity=0.75 ;
+  });
+  polygon.on("deselected", function () {
+    //polygon.opacity=1 ;
   });
 }
 
@@ -482,6 +546,10 @@ function stopAnimation() {
   }
 }
 
+
+
+
+
 // function that listens to when the user presses on an empty point with the shift button on the canvas when in Animate mode and uses coordinates for html inputs moveObjectX and moveObjectY
 function setMouseEvents(canvas) {
   canvas.on("mouse:down", function (opt) {
@@ -573,8 +641,7 @@ function downloadImage() {
 
 ////////////////////////////////////////
 setBackground("/lib/section 3.jpg", canvas);
-setMouseEvents(canvas);
-
+(setMouseEvents(canvas));
 setColorListener();
 setWidthListener();
 setOpacityListener();
@@ -657,3 +724,28 @@ function pushForwards() {
 })();
 
 
+// function that adds textbox to the center of the canvas
+function addTextBox() {
+  var textbox = new fabric.Textbox("Textbox", {
+    left: 100,
+    top: 100,
+    width: 200,
+    height: 100,
+    fontSize: 20,
+    fill: "black",
+    fontFamily: "Arial",
+    fontWeight: "bold",
+    fontStyle: "italic",
+    textAlign: "center",
+    originX: "center",
+    originY: "center",
+    hasBorders: true,
+    hasControls: true,
+    lockMovementX: true,
+    lockMovementY: true,
+    selectable: true,
+    name: "textbox",
+  });
+  canvas.add(textbox);
+  canvas.setActiveObject(textbox);
+}
