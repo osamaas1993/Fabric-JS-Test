@@ -7,8 +7,6 @@ function setCanvasSize() {
   canvas.setWidth(Number(window.innerWidth));
 }
 
-
-
 //////////////////////////////////////////////////////////////////////////////////// CANVAS CREATION
 
 //function for creating the canvas, the function includes its parameters
@@ -190,7 +188,6 @@ function togglePan() {
     canvas.skipTargetFind = false;
     console.log(currentMode);
     removeCirclePointer();
-
   } else {
     (currentMode = "buildMode"), console.log(currentMode);
   }
@@ -441,7 +438,6 @@ canvas.on("mouse:wheel", function (opt) {
   canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
   opt.e.preventDefault();
   opt.e.stopPropagation();
-
 });
 
 //////////////////////////////////////////////////////////////////////////////////// SPRITES
@@ -502,28 +498,50 @@ function hideShow() {
 
 function animateToLoop() {
   var activeObj = canvas.getActiveObject();
+
+  var durationVar =
+    (Math.abs(activeObj.left - document.getElementById("moveObjectX").value) /
+      Number(document.getElementById("animateSpeed").value)) *
+    100;
+
   if (
     activeObj != null &&
     currentMode == "animateMode" &&
     activeObj.type == "sprite"
   ) {
+    // animate sprite from current position to target position then animate back to current position
+    const currentX = activeObj.left;
+    const currentY = activeObj.top;
+    function animateBack() {
+      // flip the activeObj on its X axis
+      activeObj.set("flipX", !activeObj.get("flipX"));
+      activeObj.animate(
+        {
+          left: currentX,
+          //top: currentY,
+        },
+        {
+          duration: durationVar,
+          onChange: canvas.renderAll.bind(canvas),
+          easing: fabric.util.ease.easeLinear,
+        }
+      );
+    }
     activeObj.animate(
       {
         left: document.getElementById("moveObjectX").value,
         //top: document.getElementById("moveObjectY").value,
       },
       {
-        duration:
-          (Math.abs(
-            activeObj.left - document.getElementById("moveObjectX").value
-          ) /
-            Number(document.getElementById("animateSpeed").value)) *
-          100,
+        duration: durationVar,
         onChange: canvas.renderAll.bind(canvas),
         easing: fabric.util.ease.easeLinear,
+        // on complete flip the stripe back
+        onComplete: animateBack,
       }
     );
-    console.log("animation complete with repeat unchecked");
+
+    console.log("animation complete with repeat ");
   } else if (
     activeObj != null &&
     currentMode == "animateMode" &&
@@ -545,10 +563,6 @@ function stopAnimation() {
     console.log("no active selection");
   }
 }
-
-
-
-
 
 // function that listens to when the user presses on an empty point with the shift button on the canvas when in Animate mode and uses coordinates for html inputs moveObjectX and moveObjectY
 function setMouseEvents(canvas) {
@@ -632,16 +646,23 @@ document
 
 // a downloadImage function that exports the canvas as an image
 function downloadImage() {
+  var guide = canvas.getObjects().filter((obj) => obj.name === "guide");
+  if (guide) {
+    guide.forEach((obj) => (obj.visible = false));
+  }
   var image = canvas.toDataURL("image/png");
   var link = document.createElement("a");
   link.download = "canvas.png";
   link.href = image;
   link.click();
+  if (guide) {
+    guide.forEach((obj) => (obj.visible = true));
+  }
 }
 
 ////////////////////////////////////////
 setBackground("/lib/section 3.jpg", canvas);
-(setMouseEvents(canvas));
+setMouseEvents(canvas);
 setColorListener();
 setWidthListener();
 setOpacityListener();
@@ -676,10 +697,14 @@ function pushForwards() {
 (function () {
   //fabric.Object.prototype.originX = fabric.Object.prototype.originY = "center";
 
+  var canvasZoom = canvas.getZoom();
+
   fabric.Canvas.prototype.getAbsoluteCoords = function (object) {
     return {
-      left: object.left,
-      top: object.top,
+      left: object.left * canvasZoom,
+      top: object.top * canvasZoom,
+      width: object.scaleX * object.width * canvasZoom,
+      height: object.scaleY * object.height * canvasZoom,
     };
   };
 
@@ -690,14 +715,13 @@ function pushForwards() {
     var activeObject = canvas.getActiveObject();
     if (activeObject) {
       // add 1 second delay
-      
+
       btn.hidden = false;
       var absCoords = canvas.getAbsoluteCoords(obj);
       //take into account canvas zoom level
       var scale = canvas.getZoom();
       btn.style.left = absCoords.left * scale + "px";
       btn.style.top = absCoords.top * scale + "px";
-    
     }
   }
 
@@ -706,8 +730,7 @@ function pushForwards() {
   canvas.on("selection:cleared", function (e) {
     btn.hidden = true;
   });
-   
-  
+
   canvas.on("mouse:move", function (opt) {
     // verify if mouse is on top of an object
     var pointer = canvas.getPointer(opt.e);
@@ -715,37 +738,107 @@ function pushForwards() {
     if (activeObject) {
       var object = canvas.findTarget(pointer);
       if (object == activeObject) {
-        positionBtnAbove(object); 
+        positionBtnAbove(object);
       }
     }
   });
-
-
 })();
-
 
 // function that adds textbox to the center of the canvas
 function addTextBox() {
   var textbox = new fabric.Textbox("Textbox", {
-    left: 100,
-    top: 100,
+    left: 500,
+    top: 500,
     width: 200,
     height: 100,
     fontSize: 20,
     fill: "black",
     fontFamily: "Arial",
-    fontWeight: "bold",
-    fontStyle: "italic",
+    //fontWeight: "bold",
+    //fontStyle: "italic",
     textAlign: "center",
     originX: "center",
     originY: "center",
     hasBorders: true,
     hasControls: true,
-    lockMovementX: true,
-    lockMovementY: true,
+    lockMovementX: false,
+    lockMovementY: false,
     selectable: true,
-    name: "textbox",
+    //name: "textbox",
   });
   canvas.add(textbox);
   canvas.setActiveObject(textbox);
 }
+
+// when mouse clicked and held on object with control key pressed, create a copy of the object that is placed when the mouse is released
+(function copyObject() {
+  var activeObject = canvas.getActiveObject();
+  if (activeObject) {
+    var copy = activeObject.clone();
+    canvas.add(copy);
+    canvas.setActiveObject(copy);
+  }
+})();
+
+//////////////////////////////////////////////////////////////////////////////////// GUIDES
+
+// function that adds a horizontal guide to the canvas, position are x y parameters
+function addHorizontalGuide(x, y) {
+  var scale = canvas.getZoom();
+  var width = 100000;
+  var height = 5;
+  var top = y;
+  var left = x;
+  var guide = new fabric.Line(
+    [left, top + height / 2, left + width, top + height / 2],
+    {
+      stroke: "blue",
+      strokeWidth: 1,
+      selectable: true,
+      originX: "center",
+      originY: "center",
+      lockMovementX: true,
+      lockMovementY: false,
+      hasBorders: false,
+      hasControls: false,
+      name: "guide",
+      excludeFromExport: true,
+      //strokeDashArray: [10],
+      top: top,
+      left: left,
+    }
+  );
+  canvas.add(guide);
+  canvas.setActiveObject(guide);
+}
+
+// if in buildMode, and user presses mouse button with shift, execute addHorizontalGuide
+(function addHorizontalGuideListener() {
+  if (currentMode == "buildMode") {
+    canvas.on("mouse:down", function (opt) {
+      if (opt.e.shiftKey) {
+        var pointer = canvas.getPointer(opt.e);
+        addHorizontalGuide(pointer.x, pointer.y);
+        console.log("added horizontal guide");
+      }
+    });
+  }
+})();
+
+// when an object overlaps a guide, lock its y position to the guide's y position
+(function lockObjectToGuide() {
+  canvas.on("object:moving", function (opt) {
+    var activeObject = canvas.getActiveObject();
+    if (activeObject && !opt.e.ctrlKey) {
+      var guides = canvas.getObjects().filter((obj) => obj.name === "guide");
+      guides.forEach((obj) => {
+        if (
+          activeObject.top < obj.top + obj.height &&
+          activeObject.top + activeObject.height > obj.top
+        ) {
+          activeObject.top = obj.top - activeObject.height / 2;
+        }
+      });
+    }
+  });
+})();

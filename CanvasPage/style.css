@@ -33,7 +33,7 @@ p {
   justify-content: space-evenly;
   height: 80%;
 }*/
- 
+
 #sidebar {
   display: block;
   position: fixed;
@@ -43,11 +43,12 @@ p {
   left: -270px;
   background-color: #707070;
   z-index: 1;
-  overflow-y:scroll;
+  overflow-y: scroll;
   padding-left: 20px;
   padding-top: 50px;
-  transition: 0.60s;
+  transition: 0.50s;
 }
+
 /* on sidebar hover animate left to 0*/
 #sidebar:hover {
   left: 0;

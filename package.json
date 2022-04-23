@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/osamaas1993/Fabric-JS-Test#readme",
   "dependencies": {
+    "ejs": "^3.1.7",
     "express": "^4.17.3"
   },
   "devDependencies": {
