@@ -19,6 +19,7 @@
 
 <body id="body" onload="setCanvasSize()" onresize="setCanvasSize()">
   <div id="workBody">
+
     <div id="sidebar">
       <h3>Upload</h3>
       <!--uploading image to canvas-->
@@ -36,7 +37,12 @@
       <hr>
 
       <h3>Canvas Modes</h3>
-      <button id="currentModeDiv" class="abstract" disabled>Active Mode : <strong>Build/Select mode</strong></button>
+      <div id="canvasInfoBox">
+        <p id="currentModeDiv" class="abstract" disabled>Active Mode : <strong>Build/Select mode</strong></p>
+        <div>
+          <p id="instructions"></p>
+        </div>
+      </div>
       <div id="buttonBar">
         <button class="material-symbols-rounded" onclick="togglePan(), changeModeName()">front_hand</button>
         <button class="material-symbols-outlined" onclick="toggleAnimate(), changeModeName()">animation</button>
@@ -65,15 +71,25 @@
           <label for="object-opacity" class="propertyText">Opacity:</label>
           <span class="propertyText" id="opacitySelector">1</span><input type="range" value="1" min="0" max="1"
             step="0.1" id="object-opacity">
+          <br>
+
+          <p><input type="checkbox" id="objectFill" onclick="setFillListener()">Fill</p>
         </div> <br>
       </div>
 
       <div id="objectButtons">
         <h3 id="objectsTitle"> Create Objects</h3>
+        <!-- create a select list for different sprites-->
+        <select id="spriteSelecter" onchange="setSpriteListener()">
+          <option value="walkingMan">Walking Man</option>
+          <option value="standingMan">Standing Man</option>
+        </select>
+
         <button class="material-symbols-outlined" onclick="addSprite()">directions_walk</button>
         <button class="material-symbols-sharp" onclick="createRectangle()">crop_square</button>
         <button class="material-symbols-outlined" onclick="createCircle(canvas)">circle</button>
         <button class="material-symbols-sharp" onclick="createTriangle()">change_history</button>
+        <button class="material-symbols-sharp" onclick="createLineArrow()">call_made</button>
         <button class="material-symbols-sharp" onclick="addTextBox()">title</button>
         <button class="material-symbols-outlined" onclick="copy()">content_copy</button>
         <button class="material-symbols-outlined" onclick="paste()">content_paste</button>
@@ -98,7 +114,11 @@
     <div id="canvasSection">
       <!-- <p id="canvas-mode"></p> -->
       <canvas id="canvasID"></canvas>
-      <button id="hover" style="position: absolute;" hidden>Hover</button>
+      <!--<button id="hover" style="position: absolute;" hidden>Hover</button>-->
+    </div>
+
+    <div id="rightSidebar">
+
     </div>
   </div>
   <br />

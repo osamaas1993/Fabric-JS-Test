@@ -20,15 +20,18 @@ function initCanvas(id) {
     backgroundColor: "white",
     uniformScaling: false,
     selection: true,
+    backgroundCaching: true,
   });
 }
 //setting the canvas background through URL
 function setBackground(url, canvas) {
-  fabric.Image.fromURL(url, function (img) {
-    canvas.backgroundImage = img;
-    canvas.renderAll();
+  fabric.Image.fromURL(url, function () {
+    canvas.setBackgroundColor({ source: url, repeat: "repeat" }, function () {
+      canvas.renderAll();
+    });
   });
 }
+
 //creating a canvas that takes its options from the initCanvas function, the ID parameter is the canvas html ID
 const canvas = initCanvas("canvasID");
 
@@ -39,6 +42,7 @@ const modes = {
   build: "buildMode",
   draw: "drawMode",
   animate: "animateMode",
+  lineArrow: "lineArrowMode",
 };
 
 var currentMode = "buildMode";
@@ -64,6 +68,9 @@ function changeModeName() {
     document.getElementById(
       "currentModeDiv"
     ).innerHTML = `Active Mode : <strong>Build/Select mode</strong>`;
+    /*document.getElementById(
+      "instructions"
+    ).innerHTML = `<p>Select an object to edit it, or shift left click to create guide</p>`;*/
   }
 }
 // modifying the drawing width using the slider
@@ -98,7 +105,6 @@ function setColorListener() {
   colorPicker.addEventListener("change", function (event) {
     color = event.target.value;
     console.log(event.target.value);
-    const e = canvas.getActiveObjects();
     canvas.freeDrawingBrush.color = color;
     if (canvas.getActiveObject()) {
       canvas.getActiveObject().fill = color;
@@ -106,6 +112,24 @@ function setColorListener() {
     canvas.renderAll();
   });
 }
+
+// modifying the element fill
+// listen to checkbox with id "fill"
+
+function setFillListener() {
+  const fillCheck = document.getElementById("objectFill");
+  fillCheck.addEventListener("change", function () {
+    activeObject = canvas.getActiveObject();
+    if (activeObject) {
+      activeObject.set("fill", color);
+      console.log("fill checkbox is checked");
+      canvas.renderAll();
+    } else {
+      console.log("no active selection");
+    }
+  });
+}
+
 //////////////////////////////////////////////////////////////////////////////////// MODES
 // clear canvas function
 function clearCanvas(canvas) {
@@ -218,6 +242,19 @@ function toggleBuild() {
   }
 }
 
+//for the toggle line arrow button
+/*
+function createLineArrow() {
+  if (currentMode !== "lineArrowMode") {
+    currentMode = "lineArrowMode";
+    canvas.skipTargetFind = false;
+    canvas.isDrawingMode = false;
+    console.log(currentMode);
+    removeCirclePointer();
+    canvas.selection = true;
+  }
+}
+*/
 //for the toggle draw button and drawing paramters
 function toggleDraw() {
   if (currentMode !== "drawMode") {
@@ -350,6 +387,149 @@ function createPolygon() {
   });
 }
 
+// create line and arrow
+/*
+fabric.LineArrow = fabric.util.createClass(fabric.Line, {
+  type: "lineArrow",
+
+  initialize: function (element, options) {
+    options || (options = {});
+    this.callSuper("initialize", element, options);
+  },
+
+  toObject: function () {
+    return fabric.util.object.extend(this.callSuper("toObject"));
+  },
+
+  _render: function (ctx) {
+    this.callSuper("_render", ctx);
+
+    // do not render if width/height are zeros or object is not visible
+    if (this.width === 0 || this.height === 0 || !this.visible) return;
+
+    ctx.save();
+
+    var xDiff = this.x2 - this.x1;
+    var yDiff = this.y2 - this.y1;
+    var angle = Math.atan2(yDiff, xDiff);
+    ctx.translate((this.x2 - this.x1) / 2, (this.y2 - this.y1) / 2);
+    ctx.rotate(angle);
+    ctx.beginPath();
+    //move 10px in front of line to start the arrow so it does not have the square line end showing in front (0,0)
+    ctx.moveTo(10, 0);
+    ctx.lineTo(-20, 15);
+    ctx.lineTo(-20, -15);
+    ctx.closePath();
+    ctx.fillStyle = this.stroke;
+    ctx.fill();
+
+    ctx.restore();
+  },
+});
+
+fabric.LineArrow.fromObject = function (object, callback) {
+  callback &&
+    callback(
+      new fabric.LineArrow([object.x1, object.y1, object.x2, object.y2], object)
+    );
+};
+
+fabric.LineArrow.async = true;
+
+var Arrow = (function () {
+  class Arrow {
+    constructor(canvas) {
+      this.canvas = canvas;
+      this.className = "Arrow";
+      this.isDrawing = false;
+      this.bindEvents();
+    }
+    bindEvents() {
+      var inst = this;
+
+      inst.canvas.on("mouse:down", function (o) {
+        if (currentMode === "lineArrowMode") {
+          inst.onMouseDown(o);
+          console.log("mouse down for line arrow");
+          canvas.skipTargetFind = true;
+          canvas.selection = false;
+          changeModeName();
+        }
+      });
+      inst.canvas.on("mouse:move", function (o) {
+        inst.onMouseMove(o);
+      });
+      inst.canvas.on("mouse:up", function (o) {
+        if (currentMode !== "buildMode") {
+          currentMode = "buildMode";
+          inst.onMouseUp(o);
+          canvas.skipTargetFind = false;
+          canvas.selection = true;
+          console.log("mouse up for line arrow");
+        }
+      });
+      inst.canvas.on("object:moving", function (o) {
+        inst.disable();
+      });
+    }
+    onMouseUp(o) {
+      var inst = this;
+      inst.disable();
+    }
+    onMouseMove(o) {
+      var inst = this;
+      if (!inst.isEnable()) {
+        return;
+      }
+
+      var pointer = inst.canvas.getPointer(o.e);
+      var activeObj = inst.canvas.getActiveObject();
+      activeObj.set({
+        x2: pointer.x,
+        y2: pointer.y,
+      });
+      activeObj.setCoords();
+      inst.canvas.renderAll();
+    }
+    onMouseDown(o) {
+      var inst = this;
+      inst.enable();
+      var pointer = inst.canvas.getPointer(o.e);
+
+      var points = [pointer.x, pointer.y, pointer.x, pointer.y];
+      const widthPicker = document.getElementById("drawing-line-width");
+      widthPicker.addEventListener("change", function (event) {
+        drawWidth = Number(event.target.value);
+      });
+      var line = new fabric.LineArrow(points, {
+        strokeWidth: drawWidth,
+        fill: color,
+        stroke: color,
+        originX: "center",
+        originY: "center",
+        hasBorders: true,
+        hasControls: true,
+      });
+
+      inst.canvas.add(line).setActiveObject(line);
+    }
+    isEnable() {
+      return this.isDrawing;
+    }
+    enable() {
+      this.isDrawing = true;
+    }
+    disable() {
+      this.isDrawing = false;
+    }
+  }
+
+  return Arrow;
+})();
+var arrow = new Arrow(canvas);
+*/
+// end of line and arrow creation
+
 //COPY AND PASTE FUNCTIONS
 function copy() {
   var activeSelection = canvas.getActiveObject();
@@ -456,6 +636,8 @@ function addSprite() {
       sprite.set({
         left: i,
         top: j,
+        originX: "center",
+        originY: "center",
         opacity: 1,
         objectCaching: false,
         fill: color,
@@ -482,6 +664,7 @@ function addSprite() {
     fabric.util.requestAnimFrame(render);
   })();
 }
+// end of sprite creation function
 
 function hideShow() {
   if ((canvas.getActiveObject().visible = true)) {
@@ -518,7 +701,7 @@ function animateToLoop() {
       activeObj.animate(
         {
           left: currentX,
-          //top: currentY,
+          top: currentY,
         },
         {
           duration: durationVar,
@@ -530,7 +713,7 @@ function animateToLoop() {
     activeObj.animate(
       {
         left: document.getElementById("moveObjectX").value,
-        //top: document.getElementById("moveObjectY").value,
+        top: document.getElementById("moveObjectY").value,
       },
       {
         duration: durationVar,
@@ -547,7 +730,38 @@ function animateToLoop() {
     currentMode == "animateMode" &&
     activeObj.type !== "sprite"
   ) {
-    console.log("no sprite selected");
+    const currentX = activeObj.left;
+    const currentY = activeObj.top;
+    function animateBack() {
+      // flip the activeObj on its X axis
+      activeObj.set("flipX", !activeObj.get("flipX"));
+      activeObj.animate(
+        {
+          left: currentX,
+          top: currentY,
+        },
+        {
+          duration: durationVar,
+          onChange: canvas.renderAll.bind(canvas),
+          easing: fabric.util.ease.easeLinear,
+        }
+      );
+    }
+    activeObj.animate(
+      {
+        left: document.getElementById("moveObjectX").value,
+        top: document.getElementById("moveObjectY").value,
+      },
+      {
+        duration: durationVar,
+        onChange: canvas.renderAll.bind(canvas),
+        easing: fabric.util.ease.easeLinear,
+        // on complete flip the stripe back
+        onComplete: animateBack,
+      }
+    );
+
+    console.log("not sprite animation complete with repeat ");
   } else {
     console.log("no active selection");
   }
@@ -661,7 +875,7 @@ function downloadImage() {
 }
 
 ////////////////////////////////////////
-setBackground("/lib/section 3.jpg", canvas);
+setBackground("/lib/svg-grid.svg", canvas);
 setMouseEvents(canvas);
 setColorListener();
 setWidthListener();
@@ -694,7 +908,7 @@ function pushForwards() {
 //////////////////////////////////////////////////////////////////////////////////// HTML BUTTON POSITIONING ON CANVAS
 
 // function that positions btn above the selected object if an object is selected
-(function () {
+/*(function () {
   //fabric.Object.prototype.originX = fabric.Object.prototype.originY = "center";
 
   var canvasZoom = canvas.getZoom();
@@ -742,7 +956,7 @@ function pushForwards() {
       }
     }
   });
-})();
+})();*/
 
 // function that adds textbox to the center of the canvas
 function addTextBox() {
@@ -782,11 +996,11 @@ function addTextBox() {
 
 //////////////////////////////////////////////////////////////////////////////////// GUIDES
 
-// function that adds a horizontal guide to the canvas, position are x y parameters
+// function that adds a horizontal guide to the canvas, position are x y parameters,
 function addHorizontalGuide(x, y) {
   var scale = canvas.getZoom();
   var width = 100000;
-  var height = 5;
+  var height = 20;
   var top = y;
   var left = x;
   var guide = new fabric.Line(
@@ -801,6 +1015,7 @@ function addHorizontalGuide(x, y) {
       lockMovementY: false,
       hasBorders: false,
       hasControls: false,
+      //every guide has a unique number in its name
       name: "guide",
       excludeFromExport: true,
       //strokeDashArray: [10],
@@ -808,6 +1023,7 @@ function addHorizontalGuide(x, y) {
       left: left,
     }
   );
+
   canvas.add(guide);
   canvas.setActiveObject(guide);
 }
@@ -842,3 +1058,14 @@ function addHorizontalGuide(x, y) {
     }
   });
 })();
+
+// function setSpriteListener listens to change in HTML select element and sets the sprite to the selected value
+function setSpriteListener() {
+  var spriteSelect = document.getElementById("spriteSelecter");
+  spriteSelect.addEventListener("change", function () {
+    var spriteName = spriteSelect.value;
+    console.log(spriteName);
+    canvas.getActiveObject().set("sprite", sprite);
+    canvas.renderAll();
+  });
+}

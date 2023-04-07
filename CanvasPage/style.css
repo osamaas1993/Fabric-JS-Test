@@ -46,7 +46,7 @@ p {
   overflow-y: scroll;
   padding-left: 20px;
   padding-top: 50px;
-  transition: 0.50s;
+  transition: 0.750s;
 }
 
 /* on sidebar hover animate left to 0*/
@@ -55,6 +55,33 @@ p {
   transition-timing-function: ease-in-out;
   background-color: #e8e8e8;
 }
+
+#sidebar:not(:hover) {
+  transition-delay: 3s;
+}
+
+#rightSidebar {
+  display: block;
+  position: fixed;
+  width: 300px;
+  height: 100%;
+  top: 0;
+  /*left is window width*/
+  left: calc(100% - 30px);
+  background-color: #707070;
+  z-index: 1;
+  overflow-y: scroll;
+  padding-left: 20px;
+  padding-top: 50px;
+  transition: 0.50s;
+}
+
+#rightSidebar:hover {
+  left: calc(100% - 300px);
+  transition-timing-function: ease-in-out;
+  background-color: #e8e8e8;
+}
+
 
 /*#canvasSection {
 
@@ -140,11 +167,47 @@ button:active {
 }
 
 #currentModeDiv {
+
+  background: rgba(102, 102, 102, 0);
+  margin-right: 200px;
+  border: rgba(102, 102, 102, 0);
+
+}
+
+#canvasInfoBox {
   position: fixed;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   top: 20px;
   left: 50vw;
   background: rgba(102, 102, 102, 0);
   margin-right: 200px;
   border: rgba(102, 102, 102, 0);
+  align-items: center;
+  text-align: center;
+}
 
+#instructions {
+
+  background: rgba(102, 102, 102, 0);
+  margin-right: 200px;
+  border: rgba(102, 102, 102, 0);
+  opacity: 0.75;
+}
+
+
+
+.box {
+  height: 200px;
+  width: 200px;
+  text-align: center;
+}
+
+.red {
+  background-color: red;
+}
+
+.green {
+  background-color: green;
 }
